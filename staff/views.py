@@ -1,9 +1,35 @@
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from chhapai.models import *
 from chhapai.serializer import *
 from .serializer import *
+from chhapai.serializer import UserSerializer
+from django.contrib.auth.models import User
+
+
+class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+
+    def update(self, request, pk):
+        instance = self.get_queryset().get(id=pk)
+        data_for_change = request.data
+        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
+        if serialized.is_valid():
+            self.perform_update(serialized)
+            return Response({"Success": True, "data": serialized.data})
+        return Response({"Success": False, "Errors": str(serialized.errors)})
+
+
+class UserUpdateDestroyView(PartialUpdateDestroyView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserAddView(generics.CreateAPIView):
+    
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class AddOrderAPi(generics.CreateAPIView):
@@ -29,5 +55,16 @@ class AssignOrderJob(generics.CreateAPIView):
     
     queryset = MidOrder.objects.all()
     serializer_class = MidOrderVerndorSerializer
-    permission_classes = [AllowAny, ]
+
+
+class JobUpdateDestroyAPI(PartialUpdateDestroyView):
+
+    queryset = Jobs.objects.all()
+    serializer_class = JobSerializer
+
+
+class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
+
+    queryset = MidOrder.objects.all()
+    serializer_class = MidOrderVerndorSerializer
 

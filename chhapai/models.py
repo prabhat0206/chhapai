@@ -32,8 +32,11 @@ class Jobs(models.Model):
     notes = models.TextField(null=True, blank=True)
     unit_cost = models.IntegerField()
     total_cost = models.IntegerField()
+    overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     comitted_date = models.CharField(max_length=100)
     discount = models.IntegerField(default=0)
+    isCompleted = models.BooleanField(default=False)
+    mode = models.CharField(max_length=100, default="normal_mode")
 
 
 class Stages(models.Model):
@@ -50,3 +53,17 @@ class MidOrder(models.Model):
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
     isDone = models.BooleanField(default=False)
     assigned_staff = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class Challans(models.Model):
+    cid = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
+
+
+class Payments(models.Model):
+    pid = models.AutoField(primary_key=True)
+    payment_id = models.CharField(max_length=255)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
+    amount = models.CharField(max_length=255)
