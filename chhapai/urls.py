@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .stats import *
 
 urlpatterns = [
     path('orders', OrderView.as_view(), name='orders'),
@@ -9,5 +10,8 @@ urlpatterns = [
     path('users', UserViewAPI.as_view(), name='users'),
     path('payments', PaymentViewAPI.as_view(), name='payments'),
     path('stages', StageViewAPI.as_view(), name='stages'),
+    path('last5', Last5Details.as_view(), name='last5'),
+    path('counts', HomePageTopStatus.as_view(), name='counts'),
+    path('jobs_in_each_stage', JobInEachStage.as_view(), name='jobs_in_each_stage'),
 ]
 

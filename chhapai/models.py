@@ -17,9 +17,7 @@ class Orders(models.Model):
     order_type = models.CharField(max_length=200)
     tax = models.FloatField(default=0.00)
     design = models.ImageField(upload_to = "designs/", null=True, blank=True)
-    delivery_date = models.CharField(max_length=100)
-    isDelivered = models.BooleanField(default=False)
-    isEmailing = models.BooleanField(default=False)
+    delivery_date = models.DateField()
 
 
 class Jobs(models.Model):
@@ -33,9 +31,12 @@ class Jobs(models.Model):
     unit_cost = models.IntegerField()
     total_cost = models.IntegerField()
     overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    comitted_date = models.CharField(max_length=100)
+    comitted_date = models.DateField()
     discount = models.IntegerField(default=0)
     isCompleted = models.BooleanField(default=False)
+    isDelivered = models.BooleanField(default=False)
+    isEmailing = models.BooleanField(default=False)
+    isOnHold = models.BooleanField(default=False)
     mode = models.CharField(max_length=100, default="normal_mode")
 
 
@@ -47,7 +48,7 @@ class Stages(models.Model):
 class MidOrder(models.Model):
     mid = models.AutoField(primary_key=True)
     stage = models.ForeignKey(Stages, on_delete=models.CASCADE)
-    expected_datetime = models.CharField(max_length=200)
+    expected_datetime = models.DateTimeField()
     notes = models.TextField(null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)

@@ -17,10 +17,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StagesSerializer(serializers.ModelSerializer):
-
+    jobs = serializers.SerializerMethodField()
     class Meta:
         model = Stages
         fields = '__all__'
+    
+    def get_jobs(self, instance):
+        return instance.midorder_set.filter(isDone=False).count()
 
 
 class MidOrderSerializer(serializers.ModelSerializer):
