@@ -10,6 +10,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+
 class Orders(models.Model):
     oid = models.AutoField(primary_key=True)
     customer_name = models.CharField(max_length=255)
@@ -18,13 +19,13 @@ class Orders(models.Model):
     tax = models.FloatField(default=0.00)
     design = models.ImageField(upload_to = "designs/", null=True, blank=True)
     delivery_date = models.DateField()
-
+    billing_address = models.TextField()
 
 class Jobs(models.Model):
     jid = models.AutoField(primary_key=True)
     item = models.CharField(max_length=255)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
-    job_name = models.CharField(max_length=100)
+    job_name = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField()
     quantity = models.IntegerField()
     notes = models.TextField(null=True, blank=True)
