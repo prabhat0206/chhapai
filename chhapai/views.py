@@ -1,23 +1,37 @@
+from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
+from rest_framework.permissions import IsAuthenticated
 from .serializer import *
+
+
+class CheckToken(generics.ListAPIView):
+    queryset = Orders.objects
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated, ]
+    
+    def get(self, request, *args, **kwargs):
+        return Response({"Success": True})
 
 
 class OrderView(generics.ListAPIView):
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerWithJobs
+    permission_classes = [IsAuthenticated, ]
 
 
 class OrderViewWithStatus(generics.ListAPIView):
 
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerwithStatus
+    permission_classes = [IsAuthenticated, ]
 
 
 class PendingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializer
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self,  *args, **kwargs):
         return super(PendingOrder, self).get_queryset(*args, **kwargs)\
@@ -28,6 +42,7 @@ class ProccessingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializer
+    permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self, *args, **kwargs):
         return super(ProccessingOrder, self).get_queryset(*args, **kwargs)\
@@ -39,12 +54,14 @@ class CompletedOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid').filter(isCompleted=True)
     serializer_class = JobSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class UserViewAPI(generics.ListAPIView):
 
     queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class PaymentViewAPI(generics.ListAPIView):
