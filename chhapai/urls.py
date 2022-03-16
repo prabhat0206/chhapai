@@ -13,5 +13,7 @@ urlpatterns = [
     path('last5', Last5Details.as_view(), name='last5'),
     path('counts', HomePageTopStatus.as_view(), name='counts'),
     path('jobs_in_each_stage', JobInEachStage.as_view(), name='jobs_in_each_stage'),
+    path('challans', ChallansAPI.as_view(), name='challans'),
+    path('jobs', MyJobsApi.as_view(), name='jobs')
 ]
 

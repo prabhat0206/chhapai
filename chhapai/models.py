@@ -21,6 +21,7 @@ class Orders(models.Model):
     delivery_date = models.DateField()
     billing_address = models.TextField()
 
+
 class Jobs(models.Model):
     jid = models.AutoField(primary_key=True)
     item = models.CharField(max_length=255)
@@ -52,10 +53,13 @@ class MidOrder(models.Model):
     expected_datetime = models.DateTimeField()
     notes = models.TextField(null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
     isDone = models.BooleanField(default=False)
     assigned_staff = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        self.order = self.job.order
+        super(MidOrder, self).save(*args, **kwargs)
 
 class Challans(models.Model):
     cid = models.AutoField(primary_key=True)

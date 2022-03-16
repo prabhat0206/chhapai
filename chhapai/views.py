@@ -1,6 +1,5 @@
 from rest_framework import generics
 from .models import *
-from rest_framework.permissions import AllowAny
 from .serializer import *
 
 
@@ -58,3 +57,20 @@ class StageViewAPI(generics.ListCreateAPIView):
 
     queryset = Stages.objects.all().order_by('-sid')
     serializer_class = StagesSerializer
+
+
+class ChallansAPI(generics.ListCreateAPIView):
+    
+    queryset = Jobs.objects.all().order_by('-jid')
+    serializer_class = JobSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        return super(ChallansAPI, self).get_queryset(*args, **kwargs)\
+            .annotate(no_assign_order=models.Count('midorder'))\
+                .filter(no_assign_order__gt=0).filter(~models.Q(midorder__isDone = False))
+
+
+class MyJobsApi(generics.ListAPIView):
+
+    queryset = Jobs.objects.all().order_by('-jid')
+    serializer_class = JobSerializerWithStatus
