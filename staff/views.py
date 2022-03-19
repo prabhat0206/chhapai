@@ -63,9 +63,8 @@ class AssignOrderJob(generics.CreateAPIView):
         job = Jobs.objects.get(jid=pk)
         if serialized.is_valid():
             self.perform_update(serialized)
-            for midorder_set in data_for_change['midorder_set']:
+            for midorder_set in data_for_change['midorders']:
                 midorder_set['job'] = job
-                midorder_set['order'] = job.order
                 new_midorder = MidOrderVerndorSerializer(midorder_set)
                 if new_midorder.is_valid():
                     new_midorder.save()
