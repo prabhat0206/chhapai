@@ -11,6 +11,11 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
+class OrderType(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
+
+
 class Orders(models.Model):
     oid = models.AutoField(primary_key=True)
     customer_name = models.CharField(max_length=255)
@@ -31,6 +36,7 @@ class Jobs(models.Model):
     design = models.ImageField(upload_to = "designs/", null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     unit_cost = models.IntegerField()
+    order_type = models.ForeignKey(OrderType, blank=True, null=True, on_delete=models.DO_NOTHING)
     total_cost = models.IntegerField()
     overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     comitted_date = models.DateField()

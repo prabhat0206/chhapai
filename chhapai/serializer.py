@@ -4,6 +4,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
 
+class OrderTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderType
+        fields = "__all__"
+
+
 class UserSerializer(serializers.ModelSerializer):
 
     @staticmethod
@@ -36,6 +43,7 @@ class StagesSerializerWithCount(serializers.ModelSerializer):
 class MidOrderSerializer(serializers.ModelSerializer):
     stage = StagesSerializer()
     assigned_staff = UserSerializer()
+    order_type = OrderTypeSerializer()
     class Meta:
         model = MidOrder
         fields = '__all__'

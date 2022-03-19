@@ -3,6 +3,7 @@ from rest_framework import generics
 from .models import *
 from rest_framework.permissions import IsAuthenticated
 from .serializer import *
+from .form import *
 
 
 class CheckToken(generics.ListAPIView):
@@ -91,3 +92,10 @@ class MyJobsApi(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializerWithStatus
+
+
+class OrderTypeApi(generics.ListAPIView):
+
+    queryset = OrderType.objects.all()
+    serializer_class = OrderTypeSerializer
+

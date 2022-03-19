@@ -1,8 +1,11 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from chhapai.form import JobForm
 from chhapai.models import *
+from rest_framework.parsers import FormParser, MultiPartParser
 from chhapai.serializer import *
+import json
 from .serializer import *
 from chhapai.serializer import UserSerializer
 from django.contrib.auth.models import User
@@ -55,16 +58,17 @@ class AssignOrderJob(generics.CreateAPIView):
     
     queryset = Jobs.objects.all()
     serializer_class = JobSerializer
+    parser_classes = (MultiPartParser, FormParser, )
+    permission_classes = [IsAuthenticated,]
 
     def update(self, request, pk):
         instance = self.get_queryset().get(id=pk)
-        data_for_change = request.data
-        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
-        job = Jobs.objects.get(jid=pk)
+        data_for_change = request._request.POST
+        serialized = JobForm(request._request.POST, request._request.FILES ,instance=instance)
         if serialized.is_valid():
-            self.perform_update(serialized)
-            for midorder_set in data_for_change['midorders']:
-                midorder_set['job'] = job
+            serialized.save()
+            for midorder_set in json.loads(data_for_change['midorders']):
+                midorder_set['job'] = instance
                 new_midorder = MidOrderVerndorSerializer(midorder_set)
                 if new_midorder.is_valid():
                     new_midorder.save()
