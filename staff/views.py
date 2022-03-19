@@ -1,7 +1,6 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from chhapai.form import JobForm
 from chhapai.models import *
 from rest_framework.parsers import FormParser, MultiPartParser
 from chhapai.serializer import *
@@ -54,27 +53,29 @@ class AddOrderAPi(generics.CreateAPIView):
         return Response({"Success": False})
 
 
-class AssignOrderJob(generics.CreateAPIView):
+class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
     
     queryset = Jobs.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerVendor
     parser_classes = (MultiPartParser, FormParser, )
     permission_classes = [IsAuthenticated,]
 
-    def update(self, request, pk):
-        instance = self.get_queryset().get(id=pk)
-        data_for_change = request._request.POST
-        serialized = JobForm(request._request.POST, request._request.FILES ,instance=instance)
-        serialized.save()
-        try:
+    def post(self, request, pk):
+        instance = self.get_queryset().get(jid=pk)
+        data_for_change = request._request.POST.dict()
+        data_for_change['design'] = request._request.FILES.get('design')
+        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
+        if serialized.is_valid():
+            self.perform_update(serialized)
             for midorder_set in json.loads(data_for_change['midorders']):
-                midorder_set['job'] = instance
-                new_midorder = MidOrderVerndorSerializer(midorder_set)
+                midorder_set['job'] = pk
+                new_midorder = MidOrderVerndorSerializer(data=midorder_set)
                 if new_midorder.is_valid():
                     new_midorder.save()
-            return {"Success": True}
-        except:
-            return {"Success": False, "Error": str(serialized.errors)}
+                else:
+                    return Response({"Success": False, "Error": new_midorder.errors})
+            return Response({"Success": True})
+        return {"Success": False, "Error": str(serialized.errors)}
 
 
 class JobUpdateDestroyAPI(PartialUpdateDestroyView):
