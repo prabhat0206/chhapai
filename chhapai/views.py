@@ -72,7 +72,7 @@ class PaymentViewAPI(generics.ListAPIView):
 
 class StageViewAPI(generics.ListCreateAPIView):
 
-    queryset = Stages.objects.all().order_by('-sid')
+    queryset = Stages.objects.all()
     serializer_class = StagesSerializer
 
 

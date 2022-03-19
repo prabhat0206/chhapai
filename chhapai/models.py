@@ -17,7 +17,6 @@ class Orders(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
     order_type = models.CharField(max_length=200)
     tax = models.FloatField(default=0.00)
-    design = models.ImageField(upload_to = "designs/", null=True, blank=True)
     delivery_date = models.DateField()
     billing_address = models.TextField()
 
@@ -29,6 +28,7 @@ class Jobs(models.Model):
     job_name = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField()
     quantity = models.IntegerField()
+    design = models.ImageField(upload_to = "designs/", null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     unit_cost = models.IntegerField()
     total_cost = models.IntegerField()
@@ -50,7 +50,7 @@ class Stages(models.Model):
 class MidOrder(models.Model):
     mid = models.AutoField(primary_key=True)
     stage = models.ForeignKey(Stages, on_delete=models.CASCADE)
-    expected_datetime = models.DateTimeField()
+    expected_datetime = models.DateTimeField(blank=True, null=True)
     notes = models.TextField(null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)

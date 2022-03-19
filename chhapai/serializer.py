@@ -12,11 +12,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('groups', 'user_permissions', )
+        exclude = ('groups', 'user_permissions')
         extra_kwargs = {'password': {'write_only': True}}
 
 
 class StagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stages
+        fields = '__all__'
+    
+
+
+class StagesSerializerWithCount(serializers.ModelSerializer):
     jobs = serializers.SerializerMethodField()
     class Meta:
         model = Stages

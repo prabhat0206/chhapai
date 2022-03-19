@@ -53,8 +53,24 @@ class AddOrderAPi(generics.CreateAPIView):
 
 class AssignOrderJob(generics.CreateAPIView):
     
-    queryset = MidOrder.objects.all()
-    serializer_class = MidOrderVerndorSerializer
+    queryset = Jobs.objects.all()
+    serializer_class = JobSerializer
+
+    def update(self, request, pk):
+        instance = self.get_queryset().get(id=pk)
+        data_for_change = request.data
+        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
+        job = Jobs.objects.get(jid=pk)
+        if serialized.is_valid():
+            self.perform_update(serialized)
+            for midorder_set in data_for_change['midorder_set']:
+                midorder_set['job'] = job
+                midorder_set['order'] = job.order
+                new_midorder = MidOrderVerndorSerializer(midorder_set)
+                if new_midorder.is_valid():
+                    new_midorder.save()
+            return {"Success": True}
+        return {"Success": False, "Error": str(serialized.errors)}
 
 
 class JobUpdateDestroyAPI(PartialUpdateDestroyView):

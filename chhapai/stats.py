@@ -58,6 +58,6 @@ class Last5Details(ListAPIView):
 class JobInEachStage(ListAPIView):
 
     queryset = Stages.objects.all()
-    serializer_class = StagesSerializer
+    serializer_class = StagesSerializerWithCount
 
 
