@@ -65,15 +65,16 @@ class AssignOrderJob(generics.CreateAPIView):
         instance = self.get_queryset().get(id=pk)
         data_for_change = request._request.POST
         serialized = JobForm(request._request.POST, request._request.FILES ,instance=instance)
-        if serialized.is_valid():
-            serialized.save()
+        serialized.save()
+        try:
             for midorder_set in json.loads(data_for_change['midorders']):
                 midorder_set['job'] = instance
                 new_midorder = MidOrderVerndorSerializer(midorder_set)
                 if new_midorder.is_valid():
                     new_midorder.save()
             return {"Success": True}
-        return {"Success": False, "Error": str(serialized.errors)}
+        except:
+            return {"Success": False, "Error": str(serialized.errors)}
 
 
 class JobUpdateDestroyAPI(PartialUpdateDestroyView):
