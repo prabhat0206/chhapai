@@ -43,7 +43,6 @@ class StagesSerializerWithCount(serializers.ModelSerializer):
 class MidOrderSerializer(serializers.ModelSerializer):
     stage = StagesSerializer()
     assigned_staff = UserSerializer()
-    order_type = OrderTypeSerializer()
     class Meta:
         model = MidOrder
         fields = '__all__'
@@ -51,6 +50,7 @@ class MidOrderSerializer(serializers.ModelSerializer):
 
 class JobSerializerWithMid(serializers.ModelSerializer):
     midorder_set = MidOrderSerializer(many=True)
+    order_type = OrderTypeSerializer()
     class Meta:
         model = Jobs
         fields = '__all__'
