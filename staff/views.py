@@ -10,6 +10,15 @@ from chhapai.serializer import UserSerializer
 from django.contrib.auth.models import User
 
 
+class UserStaffView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        data = self.get_queryset()
+        return Response({'results': self.serializer_class(data, many=True).data})
+
+
 class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, pk):
