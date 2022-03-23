@@ -10,4 +10,6 @@ urlpatterns = [
     path('user/<int:pk>', UserUpdateDestroyView.as_view(), name='update_user_view'),
     path('user', UserAddView.as_view(), name='add_user_view'),
     path('users/all', UserStaffView.as_view(), name='staff_view'),
+    path('job/<int:pk>', JobUpdateDestroyAPI.as_view(), name='job'),
+    path('midorder/<int:pk>', MidOrderUpdateDestroyAPI.as_view(), name='midorder')
 ]

@@ -22,7 +22,7 @@ class UserStaffView(generics.ListAPIView):
 class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, pk):
-        instance = self.get_queryset().get(id=pk)
+        instance = self.get_object()
         data_for_change = request.data
         serialized = self.serializer_class(instance, data=data_for_change, partial=True)
         if serialized.is_valid():
