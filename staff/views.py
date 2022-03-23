@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from chhapai.models import *
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -35,12 +35,14 @@ class UserUpdateDestroyView(PartialUpdateDestroyView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class UserAddView(generics.CreateAPIView):
-    
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class AddOrderAPi(generics.CreateAPIView):
