@@ -20,7 +20,6 @@ class Orders(models.Model):
     oid = models.AutoField(primary_key=True)
     customer_name = models.CharField(max_length=255)
     date_time = models.DateTimeField(auto_now_add=True)
-    order_type = models.CharField(max_length=200)
     tax = models.FloatField(default=0.00)
     delivery_date = models.DateField()
     billing_address = models.TextField()

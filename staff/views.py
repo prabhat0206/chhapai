@@ -61,6 +61,7 @@ class AddOrderAPi(generics.CreateAPIView):
                 if jobs.is_valid():
                     jobs.save()
             return Response({"Success": True})
+        print(new_order.errors)
         return Response({"Success": False})
 
 
