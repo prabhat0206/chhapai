@@ -7,7 +7,8 @@ from chhapai.serializer import *
 import json
 from .serializer import *
 from chhapai.serializer import UserSerializer
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
+from staff.models import User
 
 
 class UserStaffView(generics.ListAPIView):
@@ -101,3 +102,8 @@ class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
     queryset = MidOrder.objects.all()
     serializer_class = MidOrderVerndorSerializer
 
+
+class AddGroupAPI(generics.CreateAPIView):
+
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer

@@ -4,7 +4,7 @@ from .models import *
 from rest_framework.permissions import IsAuthenticated
 from .serializer import *
 from .form import *
-
+from staff.models import User
 
 class CheckToken(generics.ListAPIView):
     queryset = Orders.objects

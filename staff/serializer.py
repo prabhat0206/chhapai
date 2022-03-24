@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from chhapai.models import *
+from django.contrib.auth.models import Group
 
 
 class MidOrderVerndorSerializer(serializers.ModelSerializer):
@@ -20,4 +21,11 @@ class OrderSerializerVendor(serializers.ModelSerializer):
 
     class Meta:
         model = Orders
+        fields = '__all__'
+
+
+class GroupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Group
         fields = '__all__'
