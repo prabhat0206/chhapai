@@ -7,6 +7,7 @@ from .form import *
 from staff.models import User
 from django.utils.decorators import method_decorator
 from config.common import allowed_users
+from django.db.models import Q
 
 
 # class IsAdminUser(BasePermission):
@@ -107,3 +108,30 @@ class OrderTypeApi(generics.ListAPIView):
     queryset = OrderType.objects.all()
     serializer_class = OrderTypeSerializer
 
+
+class UserSearchAPI(generics.ListAPIView):
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, key):
+        instance = self.get_queryset()\
+            .filter(Q(name__icontains=key) | Q(username__icontains=key) | Q(email__icontains=key) | Q(ph_number__icontains=key))
+        serialized = self.serializer_class(instance, many=True).data
+        paginated = self.paginate_queryset(serialized)
+        return self.get_paginated_response(paginated)
+
+
+class JobSearchAPI(generics.ListAPIView):
+
+    queryset = Jobs.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request, key):
+        instance = self.get_queryset()\
+            .filter(Q(job_name__icontains=key) | Q(item__icontains=key) | Q(description__icontains=key) | Q(order__customer_name__icontains=key))
+        serialized = self.serializer_class(instance, many=True).data
+        paginated = self.paginate_queryset(serialized)
+        return self.get_paginated_response(paginated)

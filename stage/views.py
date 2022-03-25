@@ -2,20 +2,20 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from chhapai.models import *
 from django.db.models import Q
-from rest_framework.response import Response
-from .serializer import JobWithPermission
+from .serializer import MidOrderWithPermission
 
 
 class UserViewByPermissions(generics.ListAPIView):
 
     queryset = MidOrder.objects.all()
-    serializer_class = JobWithPermission
+    serializer_class = MidOrderWithPermission
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        instance = self.get_queryset().filter(stage__in=[user.groups.all()])\
+        instance = self.get_queryset().filter(isDone=False)\
+            .filter(stage__in=user.groups.all())\
             .filter(Q(assigned_staff=request.user) | Q(assigned_staff=None))
         serialized = self.serializer_class(instance, many=True)
-        paginate = self.paginate_queryset(serialized)
-        return Response(self.get_paginated_response(paginate))
+        paginated = self.paginate_queryset(serialized.data)
+        return self.get_paginated_response(paginated)

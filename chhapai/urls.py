@@ -16,6 +16,7 @@ urlpatterns = [
     path('challans', ChallansAPI.as_view(), name='challans'),
     path('jobs', MyJobsApi.as_view(), name='jobs'),
     path('checkauth', CheckToken.as_view(), name='check'),
-    path('order_types', OrderTypeApi.as_view(), name='order_types')
+    path('order_types', OrderTypeApi.as_view(), name='order_types'),
+    path('search_job/<key>', JobSearchAPI.as_view(), name='search_job'),
+    path('search_user/<key>', UserSearchAPI.as_view(), name='search_user'),
 ]
-

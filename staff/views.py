@@ -25,7 +25,8 @@ class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, pk):
         instance = self.get_object()
         data_for_change = request.data
-        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
+        serialized = self.serializer_class(
+            instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
             return Response({"Success": True, "data": serialized.data})
@@ -44,6 +45,16 @@ class UserAddView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser, ]
+
+    def post(self, request, *args, **kwargs):
+        new_user = self.serializer_class(data=request.data)
+        if new_user.is_valid():
+            new_user.save()
+            for group in request.data['groups']:
+                instance = Group.objects.get(id=group)
+                instance.user_set.add(new_user)
+            return Response({"Success": True, "user": self.serializer_class(new_user).data})
+        return Response({"Success": False,"error": new_user.errors})
 
 
 class AddOrderAPi(generics.CreateAPIView):
@@ -67,17 +78,18 @@ class AddOrderAPi(generics.CreateAPIView):
 
 
 class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
-    
+
     queryset = Jobs.objects.all()
     serializer_class = JobSerializerVendor
     parser_classes = (MultiPartParser, FormParser, )
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, ]
 
     def post(self, request, pk):
         instance = self.get_queryset().get(jid=pk)
         data_for_change = request._request.POST.dict()
         data_for_change['design'] = request._request.FILES.get('design')
-        serialized = self.serializer_class(instance, data=data_for_change, partial=True)
+        serialized = self.serializer_class(
+            instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
             for midorder_set in json.loads(data_for_change['midorders']):
@@ -107,3 +119,4 @@ class AddGroupAPI(generics.CreateAPIView):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
