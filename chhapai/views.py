@@ -1,10 +1,18 @@
 from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from .serializer import *
 from .form import *
 from staff.models import User
+from django.utils.decorators import method_decorator
+from config.common import allowed_users
+
+
+# class IsAdminUser(BasePermission):
+#     def has_permission(self, request, view):
+#         return bool(request.user and request.user.is_staff)
+
 
 class CheckToken(generics.ListAPIView):
     queryset = Orders.objects
@@ -73,7 +81,7 @@ class PaymentViewAPI(generics.ListAPIView):
 
 class StageViewAPI(generics.ListCreateAPIView):
 
-    queryset = Stages.objects.all()
+    queryset = Group.objects.all().exclude(name__contains="payment")
     serializer_class = StagesSerializer
 
 

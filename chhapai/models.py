@@ -1,5 +1,6 @@
 from django.db import models
 from staff.models import User
+from django.contrib.auth.models import Group
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -48,14 +49,9 @@ class Jobs(models.Model):
     mode = models.CharField(max_length=100, default="normal_mode")
 
 
-class Stages(models.Model):
-    sid = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-
-
 class MidOrder(models.Model):
     mid = models.AutoField(primary_key=True)
-    stage = models.ForeignKey(Stages, on_delete=models.CASCADE)
+    stage = models.ForeignKey(Group, on_delete=models.CASCADE)
     expected_datetime = models.DateTimeField(blank=True, null=True)
     notes = models.TextField(null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)

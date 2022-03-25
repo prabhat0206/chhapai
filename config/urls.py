@@ -9,5 +9,6 @@ urlpatterns = [
     path('', home, name='home'),
     path('api/', include('chhapai.urls')),
     path('vendor/', include('staff.urls')),
+    path('rest/', include('stage.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

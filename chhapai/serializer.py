@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from staff.models import User
+from django.contrib.auth.models import Group
 from django.contrib.auth.hashers import make_password
 
 
@@ -25,15 +26,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StagesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Stages
+        model = Group
         fields = '__all__'
     
-
 
 class StagesSerializerWithCount(serializers.ModelSerializer):
     jobs = serializers.SerializerMethodField()
     class Meta:
-        model = Stages
+        model = Group
         fields = '__all__'
     
     def get_jobs(self, instance):
