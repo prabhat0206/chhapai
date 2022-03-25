@@ -73,8 +73,7 @@ class AddOrderAPi(generics.CreateAPIView):
                 if jobs.is_valid():
                     jobs.save()
             return Response({"Success": True})
-        print(new_order.errors)
-        return Response({"Success": False})
+        return Response({"Success": False, "order": OrderSerializerWithJobs(new_order).data})
 
 
 class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
