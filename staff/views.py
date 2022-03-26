@@ -54,7 +54,7 @@ class UserAddView(generics.CreateAPIView):
                 instance = Group.objects.get(id=group)
                 instance.user_set.add(new_user)
             return Response({"Success": True, "user": self.serializer_class(new_user).data})
-        return Response({"Success": False,"error": new_user.errors})
+        return Response({"Success": False, "error": new_user.errors})
 
 
 class AddOrderAPi(generics.CreateAPIView):
@@ -126,3 +126,5 @@ class GetGroupsAPI(generics.ListAPIView):
     serializer_class = GroupSerializer
     permission_classes = [IsAdminUser, ]
 
+    def get(self, request):
+        return {"Success": True, "Groups": self.serializer_class(self.get_queryset()).data}
