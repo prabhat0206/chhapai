@@ -130,4 +130,4 @@ class GetGroupsAPI(generics.ListAPIView):
     permission_classes = [IsAdminUser, ]
 
     def get(self, request):
-        return {"Success": True, "Groups": self.serializer_class(self.get_queryset()).data}
+        return Response({"Success": True, "Groups": self.serializer_class(self.get_queryset(), many=True).data})
