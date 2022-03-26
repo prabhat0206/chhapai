@@ -61,7 +61,7 @@ class AddOrderAPi(generics.CreateAPIView):
 
     queryset = Orders.objects.all()
     serializer_class = OrderSerializerVendor
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def post(self, request):
         new_order = self.serializer_class(data=request.data)
@@ -118,4 +118,11 @@ class AddGroupAPI(generics.CreateAPIView):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [IsAdminUser, ]
+
+
+class GetGroupsAPI(generics.ListAPIView):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [IsAdminUser, ]
 
