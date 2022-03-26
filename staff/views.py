@@ -67,12 +67,15 @@ class AddOrderAPi(generics.CreateAPIView):
         new_order = self.serializer_class(data=request.data)
         if new_order.is_valid():
             new_order.save()
+            order = new_order.data
+            order['jobs_set'] = []
             for product in request.data.get('jobs'):
                 product['order'] = new_order.data['oid']
                 jobs = JobSerializerVendor(data=product)
                 if jobs.is_valid():
                     jobs.save()
-            return Response({"Success": True, "order": OrderSerializerWithJobs(new_order).data})
+                    order['jobs_set'].append(jobs.data)
+            return Response({"Success": True, "order": order})
         return Response({"Success": False})
 
 
