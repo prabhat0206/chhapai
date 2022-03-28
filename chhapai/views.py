@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated, BasePermission
 from .serializer import *
 from .form import *
 from staff.models import User
-from django.utils.decorators import method_decorator
-from config.common import allowed_users
+# from django.utils.decorators import method_decorator
+# from config.common import allowed_users
 from django.db.models import Q
 
 
@@ -70,7 +70,7 @@ class CompletedOrder(generics.ListAPIView):
 class UserViewAPI(generics.ListAPIView):
 
     queryset = User.objects.all().order_by('-id')
-    serializer_class = UserSerializer
+    serializer_class = UserSerializerWithGroup
     permission_classes = [IsAuthenticated, ]
 
 

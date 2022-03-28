@@ -15,6 +15,18 @@ class OrderTypeSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
 
+    @staticmethod
+    def validate_password(password: str) -> str:
+        return make_password(password)
+
+    class Meta:
+        model = User
+        exclude = ['user_permissions']
+        extra_kwargs = {'password': {'write_only': True}}
+
+
+class UserSerializerWithGroup(serializers.ModelSerializer):
+
     groups = GroupSerializer(many=True)
 
     @staticmethod
@@ -24,7 +36,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['user_permissions']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True},
+                        'groups': {'read_only': True}}
+
+
 
 
 class StagesSerializer(serializers.ModelSerializer):

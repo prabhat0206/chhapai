@@ -50,10 +50,11 @@ class UserAddView(generics.CreateAPIView):
         new_user = self.serializer_class(data=request.data)
         if new_user.is_valid():
             new_user.save()
+            user = User.objects.get(id=new_user.data['id'])
             for group in request.data['groups']:
                 instance = Group.objects.get(id=group)
-                instance.user_set.add(new_user)
-            return Response({"Success": True, "user": self.serializer_class(new_user).data})
+                instance.user_set.add(user)
+            return Response({"Success": True, "user": new_user.data})
         return Response({"Success": False, "error": new_user.errors})
 
 
