@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('user_permissions')
+        exclude = ['user_permissions']
         extra_kwargs = {'password': {'write_only': True}}
 
 
