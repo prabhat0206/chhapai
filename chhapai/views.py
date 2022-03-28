@@ -132,7 +132,6 @@ class JobSearchAPI(generics.ListAPIView):
     def get(self, request, key):
         instance = self.get_queryset()\
             .filter(Q(job_name__icontains=key) | Q(item__icontains=key) | Q(description__icontains=key) | Q(order__customer_name__icontains=key))
-        orders = [job.order for job in instance]
-        serialized = self.serializer_class(orders, many=True).data
+        serialized = self.serializer_class(instance, many=True).data
         paginated = self.paginate_queryset(serialized)
         return self.get_paginated_response(paginated)
