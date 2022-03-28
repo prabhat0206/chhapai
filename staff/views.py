@@ -6,7 +6,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from chhapai.serializer import *
 import json
 from .serializer import *
-from chhapai.serializer import UserSerializer
+from chhapai.serializer import UserSerializer, UserSerializerWithGroup
 from django.contrib.auth.models import Group
 from staff.models import User
 
@@ -54,7 +54,7 @@ class UserAddView(generics.CreateAPIView):
             for group in request.data['groups']:
                 instance = Group.objects.get(id=group)
                 instance.user_set.add(user)
-            return Response({"Success": True, "user": new_user.data})
+            return Response({"Success": True, "user": UserSerializerWithGroup(user).data})
         return Response({"Success": False, "error": new_user.errors})
 
 

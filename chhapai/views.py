@@ -126,7 +126,7 @@ class UserSearchAPI(generics.ListAPIView):
 class JobSearchAPI(generics.ListAPIView):
 
     queryset = Jobs.objects.all()
-    serializer_class = OrderSerializerWithJobs
+    serializer_class = JobSerializerWithStatus
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request, key):
