@@ -29,16 +29,33 @@ class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
-            return Response({"Success": True, "data": serialized.data})
+            return Response({"Success": True, "data": self.response_serializer(self.get_object()).data if self.response_serializer else serialized.data})
         return Response({"Success": False, "Errors": str(serialized.errors)})
 
 
-class UserUpdateDestroyView(PartialUpdateDestroyView):
+class UserUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser, ]
+    response_serializer = UserSerializerWithGroup
 
+    def update(self, request, pk):
+        instance = self.get_object()
+        data_for_change = request.data
+        serialized = self.serializer_class(
+            instance, data=data_for_change, partial=True)
+        if serialized.is_valid():
+            self.perform_update(serialized)
+            user = self.get_object()
+            if 'groups' in request.data:
+                for group in user.groups.all():
+                    group.user_set.remove(user)
+                for group in request.data['groups']:
+                    instance = Group.objects.get(id=group)
+                    instance.user_set.add(user)
+            return Response({"Success": True, "data": self.response_serializer(self.get_object()).data})
+        return Response({"Success": False, "Errors": str(serialized.errors)})
 
 class UserAddView(generics.CreateAPIView):
 
