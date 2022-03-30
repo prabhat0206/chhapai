@@ -29,7 +29,7 @@ class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
-            return Response({"Success": True, "data": self.response_serializer(self.get_object()).data if self.response_serializer else serialized.data})
+            return Response({"Success": True, "data": serialized.data})
         return Response({"Success": False, "Errors": str(serialized.errors)})
 
 
@@ -56,6 +56,7 @@ class UserUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
                     instance.user_set.add(user)
             return Response({"Success": True, "data": self.response_serializer(self.get_object()).data})
         return Response({"Success": False, "Errors": str(serialized.errors)})
+
 
 class UserAddView(generics.CreateAPIView):
 
