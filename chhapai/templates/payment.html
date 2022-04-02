@@ -42,7 +42,7 @@
           />
         </div>
         <div style="display: flex">
-          <h2 style="margin: 0; padding: 5px">Dispatch Details</h2>
+          <h2 style="margin: 0; padding: 5px">Payment Slip</h2>
           <div style="margin-top: 5px">
             <p style="margin: 0 5px; padding: 0"><b> Order no.: </b> {{job.order.oid}}-{{job.jid}}</p>
             <p id="date" style="margin: 0 5px; padding: 0"><b> Order date: </b> {{order_date_time}}</p>
@@ -58,21 +58,18 @@
           <span style="margin-left: 5px; padding: 0">{{job.order.billing_address}}</span>
         </div>
       </div>
+      
 
       <table style="border: 1px solid gray; margin-bottom: 20px">
         <tr>
-          <th>#</th>
-          <th>Item</th>
-          <th>Dispatch Qty</th>
-          <th>Qty per pack</th>
-          <th>No of packs</th>
+          <th>Payment Mode</th>
+          <th>Note</th>
+          <th>Amount</th>
         </tr>
         <tr>
-          <td>{{cid}}</td>
-          <td>{{job.item}}</td>
-          <td>{{dispatch_quantity}}</td>
-          <td>{{quantity_per_pack}}</td>
-          <td>{{no_of_packs}}</td>
+          <td>{{payment_method}}</td>
+          <td>{{payment_note}}</td>
+          <td>{{amount}}</td>
         </tr>
       </table>
 

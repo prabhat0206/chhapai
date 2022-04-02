@@ -152,8 +152,21 @@ class GetGroupsAPI(generics.ListAPIView):
         return Response({"Success": True, "Groups": self.serializer_class(self.get_queryset(), many=True).data})
 
 
-class ChallanUpdateDistroy(PartialUpdateDestroyView):
-
+class CreateChallanApi(generics.CreateAPIView):
     queryset = Challans.objects.all()
     serializer_class = ChallanSerializer
 
+
+class ChallanUpdateDistroy(PartialUpdateDestroyView):
+    queryset = Challans.objects.all()
+    serializer_class = ChallanSerializer
+
+
+class CreatePaymentApi(generics.CreateAPIView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentSerializer
+
+
+class PaymentUpdateDistroy(PartialUpdateDestroyView):
+    queryset = Payments.objects.all()
+    serializer_class = PaymentSerializer

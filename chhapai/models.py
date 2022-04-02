@@ -65,20 +65,29 @@ class MidOrder(models.Model):
 
 class Challans(models.Model):
     cid = models.AutoField(primary_key=True)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     dispatch_quantity = models.IntegerField(default=0)
     quantity_per_pack = models.IntegerField(default=0)
     date_time = models.DateTimeField(auto_now_add=True)
     no_of_packs = models.IntegerField(default=0)
+    generated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=6)
+
+    def save(self, *args, **kwargs):
+        self.order = self.job.order
+        super(Challans, self).save(*args, **kwargs)
 
 
 class Payments(models.Model):
     pid = models.AutoField(primary_key=True)
-    payment_id = models.CharField(max_length=255)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     amount = models.CharField(max_length=255)
+    date_time = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=255, default="Cash")
     payment_note = models.TextField(blank=True, null=True)
-    generated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=6)
+
+    def save(self, *args, **kwargs):
+        self.order = self.job.order
+        super(Payments, self).save(*args, **kwargs)

@@ -85,7 +85,7 @@ class UserViewAPI(generics.ListAPIView):
 class PaymentViewAPI(generics.ListAPIView):
 
     queryset = Payments.objects.all().order_by('-pid')
-    serializer_class = PaymentSerializer
+    serializer_class = PaymentSerializerWithJob
     permission_classes = [IsAuthenticated, ]
 
 
@@ -152,7 +152,22 @@ class ChallanPdfResponse(DetailView):
     def get(self, request, *args, **kwargs):
         instance = self.get_object()
         data = ChallanSerializerwithJob(instance).data
-        data['order_date_time'] = instance.job.order.date_time.strftime('%Y-%m-%d')
-        data['date_time'] = instance.date_time.strftime('%Y-%m-%d')
+        data['order_date_time'] = instance.job.order.date_time.strftime(
+            '%Y-%m-%d, %H:%M:%S')
+        data['date_time'] = instance.date_time.strftime('%Y-%m-%d, %H:%M:%S')
+        pdf = get_pdf_from_template(self.template_name, data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+
+class PaymentPdfResponse(DetailView):
+    queryset = Payments.objects.all()
+    template_name = 'payment.html'
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        data = PaymentSerializerWithJob(instance).data
+        data['order_date_time'] = instance.job.order.date_time.strftime(
+            '%Y-%m-%d, %H:%M:%S')
+        data['date_time'] = instance.date_time.strftime('%Y-%m-%d, %H:%M:%S')
         pdf = get_pdf_from_template(self.template_name, data)
         return HttpResponse(pdf, content_type='application/pdf')

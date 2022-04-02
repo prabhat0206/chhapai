@@ -92,10 +92,13 @@ class JobDetailsSerializer(JobSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    job = JobSerializer()
     class Meta:
         model = Payments
         fields = "__all__"
+
+
+class PaymentSerializerWithJob(PaymentSerializer):
+    job = JobDetailsSerializer()
 
 
 class ChallanSerializer(serializers.ModelSerializer):
@@ -107,3 +110,4 @@ class ChallanSerializer(serializers.ModelSerializer):
 
 class ChallanSerializerwithJob(ChallanSerializer):
     job = JobDetailsSerializer()
+

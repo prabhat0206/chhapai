@@ -13,5 +13,8 @@ urlpatterns = [
     path('job/<int:pk>', JobUpdateDestroyAPI.as_view(), name='job'),
     path('midorder/<int:pk>', MidOrderUpdateDestroyAPI.as_view(), name='midorder'),
     path('groups', GetGroupsAPI.as_view(), name='groups'),
+    path('challan', CreateChallanApi.as_view(), name='challan_create'),
     path('challan/<int:pk>', ChallanUpdateDistroy.as_view(), name='challan_update'),
+    path('payment', CreatePaymentApi.as_view(), name='payment_create'),
+    path('payment/<int:pk>', PaymentUpdateDistroy.as_view(), name='payment')
 ]
