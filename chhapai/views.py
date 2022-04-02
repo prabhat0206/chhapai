@@ -70,7 +70,7 @@ class CompletedOrder(generics.ListAPIView):
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self, *args, **kwargs):
-        return super(ChallansAPI, self).get_queryset(*args, **kwargs)\
+        return super(CompletedOrder, self).get_queryset(*args, **kwargs)\
             .annotate(no_assign_order=models.Count('midorder'))\
             .filter(no_assign_order__gt=0).filter(~models.Q(midorder__isDone=False))
 

@@ -81,3 +81,4 @@ class Payments(models.Model):
     amount = models.CharField(max_length=255)
     payment_method = models.CharField(max_length=255, default="Cash")
     payment_note = models.TextField(blank=True, null=True)
+    generated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
