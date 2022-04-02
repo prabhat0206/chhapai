@@ -3,7 +3,6 @@ from .models import *
 from staff.models import User
 from django.contrib.auth.models import Group
 from django.contrib.auth.hashers import make_password
-from staff.serializer import GroupSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -42,14 +41,16 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
-class UserSerializerWithGroup(UserSerializer):
-    groups = GroupSerializer(many=True)
-
-
 class StagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         exclude = ['permissions']
+
+
+class UserSerializerWithGroup(UserSerializer):
+    groups = StagesSerializer(many=True)
+
+
     
 
 class StagesSerializerWithCount(StagesSerializer):
