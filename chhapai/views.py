@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticated, BasePermission
 from .serializer import *
 from .form import *
 from staff.models import User
+from django.views.generic import DetailView
+from django.http import HttpResponse
+from staff.pdfgen import get_pdf_from_template
 # from django.utils.decorators import method_decorator
 # from config.common import allowed_users
 from django.db.models import Q
@@ -96,7 +99,7 @@ class StageViewAPI(generics.ListCreateAPIView):
 class ChallansAPI(generics.ListCreateAPIView):
     
     queryset = Challans.objects.all().order_by('-cid')
-    serializer_class = ChallanSerializer
+    serializer_class = ChallanSerializerwithJob
     permission_classes = [IsAuthenticated, ]
 
 
@@ -140,3 +143,15 @@ class JobSearchAPI(generics.ListAPIView):
         serialized = self.serializer_class(instance, many=True).data
         paginated = self.paginate_queryset(serialized)
         return self.get_paginated_response(paginated)
+
+
+class ChallanPdfResponse(DetailView):
+    queryset = Challans.objects.all()
+    template_name = 'index.html'
+
+    def get(self, request, *args, **kwargs):
+       pdf = get_pdf_from_template(
+           self.template_name, ChallanSerializerwithJob(self.get_object()).data)
+       return HttpResponse(pdf, content_type='application/pdf')
+
+

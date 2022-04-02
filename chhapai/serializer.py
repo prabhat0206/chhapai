@@ -51,8 +51,6 @@ class UserSerializerWithGroup(UserSerializer):
     groups = StagesSerializer(many=True)
 
 
-    
-
 class StagesSerializerWithCount(StagesSerializer):
     jobs = serializers.SerializerMethodField()
     
@@ -100,8 +98,11 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class ChallanSerializer(serializers.ModelSerializer):
-    job = JobDetailsSerializer()
 
     class Meta:
         model = Challans
         fields = '__all__'
+
+
+class ChallanSerializerwithJob(ChallanSerializer):
+    job = JobDetailsSerializer()

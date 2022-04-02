@@ -1,17 +1,14 @@
-from django.views.generic import DetailView
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from chhapai.models import *
 from rest_framework.parsers import FormParser, MultiPartParser
 from chhapai.serializer import *
-from django.http import HttpResponse
 import json
 from .serializer import *
 from chhapai.serializer import UserSerializer, UserSerializerWithGroup
 from django.contrib.auth.models import Group
 from staff.models import User
-from .pdfgen import get_pdf_from_template
 
 
 class UserStaffView(generics.ListAPIView):
@@ -155,11 +152,8 @@ class GetGroupsAPI(generics.ListAPIView):
         return Response({"Success": True, "Groups": self.serializer_class(self.get_queryset(), many=True).data})
 
 
-class ChallanPdfResponse(DetailView):
-    queryset = Challans.objects.all()
-    template_name = 'index.html'
+class ChallanUpdateDistroy(PartialUpdateDestroyView):
 
-    def get(self, request, *args, **kwargs):
-       pdf = get_pdf_from_template(
-           self.template_name, ChallanSerializer(self.get_object()).data)
-       return HttpResponse(pdf, content_type='application/pdf')
+    queryset = Challans.objects.all()
+    serializer_class = ChallanSerializer
+
