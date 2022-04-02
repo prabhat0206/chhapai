@@ -22,7 +22,7 @@ class CheckToken(generics.ListAPIView):
     queryset = Orders.objects
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated, ]
-    
+
     def get(self, request, *args, **kwargs):
         return Response({"Success": True})
 
@@ -60,7 +60,7 @@ class ProccessingOrder(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         return super(ProccessingOrder, self).get_queryset(*args, **kwargs)\
             .annotate(no_assign_order=models.Count('midorder'))\
-                .filter(no_assign_order__gt=0).filter(isCompleted=False)
+            .filter(no_assign_order__gt=0).filter(isCompleted=False)
 
 
 class CompletedOrder(generics.ListAPIView):
@@ -97,7 +97,7 @@ class StageViewAPI(generics.ListCreateAPIView):
 
 
 class ChallansAPI(generics.ListCreateAPIView):
-    
+
     queryset = Challans.objects.all().order_by('-cid')
     serializer_class = ChallanSerializerwithJob
     permission_classes = [IsAuthenticated, ]
@@ -150,8 +150,9 @@ class ChallanPdfResponse(DetailView):
     template_name = 'index.html'
 
     def get(self, request, *args, **kwargs):
-       pdf = get_pdf_from_template(
-           self.template_name, ChallanSerializerwithJob(self.get_object()).data)
-       return HttpResponse(pdf, content_type='application/pdf')
-
-
+        instance = self.get_object()
+        data = ChallanSerializerwithJob(instance).data
+        data['order_date_time'] = instance.job.order.date_time.strftime('%Y-%m-%d')
+        data['date_time'] = instance.date_time.strftime('%Y-%m-%d')
+        pdf = get_pdf_from_template(self.template_name, data)
+        return HttpResponse(pdf, content_type='application/pdf')

@@ -1,8 +1,9 @@
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import path, include
 
 def home(request):
-    return 'Hello'
+    return JsonResponse({"Success": True}, safe=False)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -87,6 +87,7 @@ class OrderSerializerwithStatus(OrderSerializer):
 
 
 class JobDetailsSerializer(JobSerializer):
+    order = OrderSerializer()
     midorder_set = MidOrderSerializer(many=True)
 
 

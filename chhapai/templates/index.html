@@ -36,7 +36,7 @@
       <div style="display: flex; justify-content: space-between">
         <div>
           <img
-            src="https://logovectorseek.com/wp-content/uploads/2020/02/demos-logo-vector.png"
+            src="https://dl.dropboxusercontent.com/s/6kgde4udhbn45k4/logo.svg?dl=0"
             alt=""
             width="200px"
           />
@@ -44,10 +44,10 @@
         <div style="display: flex">
           <h2 style="margin: 0; padding: 5px">Dispatch Details</h2>
           <div style="margin-top: 5px">
-            <p style="margin: 0 5px; padding: 0"><b> Order no.: </b> 64688</p>
-            <p style="margin: 0 5px; padding: 0"><b> Order date: </b> 64688</p>
+            <p style="margin: 0 5px; padding: 0"><b> Order no.: </b> {{job.order.oid}}</p>
+            <p id="date" style="margin: 0 5px; padding: 0"><b> Order date: </b> {{order_date_time}}</p>
             <p style="margin: 0 5px; padding: 0">
-              <b> Dispatch date: </b> 64688
+              <b> Dispatch date: </b> {{date_time}}
             </p>
           </div>
         </div>
@@ -92,6 +92,7 @@
     </div>
 
     <script>
+
       window.addEventListener("load", () => {
         document.getElementById("cont").style.width = window.innerWidth + "px";
       });
