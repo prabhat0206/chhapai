@@ -14,11 +14,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    order = OrderSerializer()
-
     class Meta:
         model = Jobs
         fields = '__all__'
+
+
+class JobSerializerWithOrderDetails(JobSerializer):
+    order = OrderSerializer()
 
 
 class OrderTypeSerializer(serializers.ModelSerializer):
@@ -86,7 +88,6 @@ class OrderSerializerwithStatus(OrderSerializer):
 
 
 class JobDetailsSerializer(JobSerializer):
-    order = OrderSerializer()
     midorder_set = MidOrderSerializer(many=True)
 
 

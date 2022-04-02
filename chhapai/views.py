@@ -40,7 +40,7 @@ class OrderViewWithStatus(generics.ListAPIView):
 class PendingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerWithOrderDetails
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self,  *args, **kwargs):
@@ -51,7 +51,7 @@ class PendingOrder(generics.ListAPIView):
 class ProccessingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerWithOrderDetails
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self, *args, **kwargs):
@@ -63,7 +63,7 @@ class ProccessingOrder(generics.ListAPIView):
 class CompletedOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerWithOrderDetails
     permission_classes = [IsAuthenticated, ]
 
     def get_queryset(self, *args, **kwargs):
@@ -83,30 +83,35 @@ class PaymentViewAPI(generics.ListAPIView):
 
     queryset = Payments.objects.all().order_by('-pid')
     serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class StageViewAPI(generics.ListCreateAPIView):
 
     queryset = Group.objects.all().exclude(name__contains="payment")
     serializer_class = StagesSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class ChallansAPI(generics.ListCreateAPIView):
     
     queryset = Challans.objects.all().order_by('-cid')
     serializer_class = ChallanSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class MyJobsApi(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializerWithStatus
+    permission_classes = [IsAuthenticated, ]
 
 
 class OrderTypeApi(generics.ListAPIView):
 
     queryset = OrderType.objects.all()
     serializer_class = OrderTypeSerializer
+    permission_classes = [IsAuthenticated, ]
 
 
 class UserSearchAPI(generics.ListAPIView):

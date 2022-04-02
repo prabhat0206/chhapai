@@ -9,27 +9,3 @@ class MidOrderVerndorSerializer(serializers.ModelSerializer):
         model = MidOrder
         fields = '__all__'
 
-
-class JobSerializerVendor(serializers.ModelSerializer):
-
-    class Meta:
-        model = Jobs
-        fields = '__all__'
-
-
-class OrderSerializerVendor(serializers.ModelSerializer):
-
-    class Meta:
-        model = Orders
-        fields = '__all__'
-
-
-class GroupSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Group
-        exclude = ("permissions", )
-
-
-
-

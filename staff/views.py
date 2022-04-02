@@ -1,4 +1,4 @@
-from django.views.generic import View, DetailView
+from django.views.generic import DetailView
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -82,7 +82,7 @@ class UserAddView(generics.CreateAPIView):
 class AddOrderAPi(generics.CreateAPIView):
 
     queryset = Orders.objects.all()
-    serializer_class = OrderSerializerVendor
+    serializer_class = OrderSerializer
     permission_classes = [IsAdminUser, ]
 
     def post(self, request):
@@ -93,7 +93,7 @@ class AddOrderAPi(generics.CreateAPIView):
             order['jobs_set'] = []
             for product in request.data.get('jobs'):
                 product['order'] = new_order.data['oid']
-                jobs = JobSerializerVendor(data=product)
+                jobs = JobSerializer(data=product)
                 if jobs.is_valid():
                     jobs.save()
                     order['jobs_set'].append(jobs.data)
@@ -104,7 +104,7 @@ class AddOrderAPi(generics.CreateAPIView):
 class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
 
     queryset = Jobs.objects.all()
-    serializer_class = JobSerializerVendor
+    serializer_class = JobSerializer
     parser_classes = (MultiPartParser, FormParser, )
     permission_classes = [IsAuthenticated, ]
 
@@ -130,7 +130,7 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
 class JobUpdateDestroyAPI(PartialUpdateDestroyView):
 
     queryset = Jobs.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerWithOrderDetails
 
 
 class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
@@ -142,13 +142,13 @@ class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
 class AddGroupAPI(generics.CreateAPIView):
 
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = StagesSerializer
     permission_classes = [IsAdminUser, ]
 
 
 class GetGroupsAPI(generics.ListAPIView):
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = StagesSerializer
     permission_classes = [IsAdminUser, ]
 
     def get(self, request):
