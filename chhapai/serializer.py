@@ -6,6 +6,21 @@ from django.contrib.auth.hashers import make_password
 from staff.serializer import GroupSerializer
 
 
+class OrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Orders
+        fields = '__all__'
+
+
+class JobSerializer(serializers.ModelSerializer):
+    order = OrderSerializer()
+
+    class Meta:
+        model = Jobs
+        fields = '__all__'
+
+
 class OrderTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -25,34 +40,18 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
-class UserSerializerWithGroup(serializers.ModelSerializer):
-
+class UserSerializerWithGroup(UserSerializer):
     groups = GroupSerializer(many=True)
-
-    @staticmethod
-    def validate_password(password: str) -> str:
-        return make_password(password)
-
-    class Meta:
-        model = User
-        exclude = ['user_permissions']
-        extra_kwargs = {'password': {'write_only': True},
-                        'groups': {'read_only': True}}
-
-
 
 
 class StagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = '__all__'
+        exclude = ['permissions']
     
 
-class StagesSerializerWithCount(serializers.ModelSerializer):
+class StagesSerializerWithCount(StagesSerializer):
     jobs = serializers.SerializerMethodField()
-    class Meta:
-        model = Group
-        fields = '__all__'
     
     def get_jobs(self, instance):
         return instance.midorder_set.filter(isDone=False).count()
@@ -66,59 +65,29 @@ class MidOrderSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class JobSerializerWithMid(serializers.ModelSerializer):
+class JobSerializerWithMid(JobSerializer):
     midorder_set = MidOrderSerializer(many=True)
     order_type = OrderTypeSerializer()
-    class Meta:
-        model = Jobs
-        fields = '__all__'
 
 
-class OrderSerializerWithJobs(serializers.ModelSerializer):
+class OrderSerializerWithJobs(OrderSerializer):
     jobs_set = JobSerializerWithMid(many=True)
-    class Meta:
-        model = Orders
-        fields = '__all__'
 
 
-class JobSerializerWithStatus(serializers.ModelSerializer):
+class JobSerializerWithStatus(JobSerializer):
     midorder_status = serializers.SerializerMethodField()
-    class Meta:
-        model = Jobs
-        fields = '__all__'
 
     def get_midorder_status(self, instance):
         return MidOrderSerializer(instance.midorder_set.filter(isDone=False).first()).data
 
 
-class OrderSerializerwithStatus(serializers.ModelSerializer):
+class OrderSerializerwithStatus(OrderSerializer):
     jobs_set = JobSerializerWithStatus(many=True)
-    class Meta:
-        model = Orders
-        fields = '__all__'
 
 
-class OrderSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Orders
-        fields = '__all__'
-
-
-class JobSerializer(serializers.ModelSerializer):
-    order = OrderSerializer()
-    class Meta:
-        model = Jobs
-        fields = '__all__'
-
-
-class JobDetailsSerializer(serializers.ModelSerializer):
+class JobDetailsSerializer(JobSerializer):
     order = OrderSerializer()
     midorder_set = MidOrderSerializer(many=True)
-
-    class Meta:
-        model = Jobs
-        fields = "__all__"
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -128,3 +97,9 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ChallanSerializer(serializers.ModelSerializer):
+    job = JobDetailsSerializer()
+
+    class Meta:
+        model = Challans
+        fields = '__all__'

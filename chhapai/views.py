@@ -62,9 +62,14 @@ class ProccessingOrder(generics.ListAPIView):
 
 class CompletedOrder(generics.ListAPIView):
 
-    queryset = Jobs.objects.all().order_by('-jid').filter(isCompleted=True)
+    queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated, ]
+
+    def get_queryset(self, *args, **kwargs):
+        return super(ChallansAPI, self).get_queryset(*args, **kwargs)\
+            .annotate(no_assign_order=models.Count('midorder'))\
+            .filter(no_assign_order__gt=0).filter(~models.Q(midorder__isDone=False))
 
 
 class UserViewAPI(generics.ListAPIView):
@@ -88,13 +93,8 @@ class StageViewAPI(generics.ListCreateAPIView):
 
 class ChallansAPI(generics.ListCreateAPIView):
     
-    queryset = Jobs.objects.all().order_by('-jid')
-    serializer_class = JobSerializer
-
-    def get_queryset(self, *args, **kwargs):
-        return super(ChallansAPI, self).get_queryset(*args, **kwargs)\
-            .annotate(no_assign_order=models.Count('midorder'))\
-                .filter(no_assign_order__gt=0).filter(~models.Q(midorder__isDone = False))
+    queryset = Challans.objects.all().order_by('-cid')
+    serializer_class = ChallanSerializer
 
 
 class MyJobsApi(generics.ListAPIView):

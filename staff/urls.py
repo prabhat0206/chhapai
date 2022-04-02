@@ -12,5 +12,6 @@ urlpatterns = [
     path('users/all', UserStaffView.as_view(), name='staff_view'),
     path('job/<int:pk>', JobUpdateDestroyAPI.as_view(), name='job'),
     path('midorder/<int:pk>', MidOrderUpdateDestroyAPI.as_view(), name='midorder'),
-    path('groups', GetGroupsAPI.as_view(), name='groups')
+    path('groups', GetGroupsAPI.as_view(), name='groups'),
+    path('challan/<int:pk>', ChallanPdfResponse.as_view(), name='challans')
 ]

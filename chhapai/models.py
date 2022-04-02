@@ -67,6 +67,10 @@ class Challans(models.Model):
     cid = models.AutoField(primary_key=True)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
+    dispatch_quantity = models.IntegerField(default=0)
+    quantity_per_pack = models.IntegerField(default=0)
+    date_time = models.DateTimeField(auto_now_add=True)
+    no_of_packs = models.IntegerField(default=0)
 
 
 class Payments(models.Model):
@@ -75,3 +79,5 @@ class Payments(models.Model):
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     amount = models.CharField(max_length=255)
+    payment_method = models.CharField(max_length=255, default="Cash")
+    payment_note = models.TextField(blank=True, null=True)

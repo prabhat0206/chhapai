@@ -29,3 +29,7 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         exclude = ("permissions", )
+
+
+
+
