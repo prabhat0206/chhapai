@@ -42,9 +42,9 @@ class Jobs(models.Model):
     overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     comitted_date = models.DateField()
     discount = models.IntegerField(default=0)
-    isCompleted = models.BooleanField(default=False)
     isDelivered = models.BooleanField(default=False)
     isEmailing = models.BooleanField(default=False)
+    amount_paid = models.IntegerField(default=0)
     isOnHold = models.BooleanField(default=False)
     mode = models.CharField(max_length=100, default="normal_mode")
 
@@ -90,4 +90,6 @@ class Payments(models.Model):
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
+        self.job.amount_paid += self.amount
+        self.job.save()
         super(Payments, self).save(*args, **kwargs)

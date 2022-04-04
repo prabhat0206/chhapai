@@ -165,7 +165,17 @@ class ChallanUpdateDistroy(PartialUpdateDestroyView):
 class CreatePaymentApi(generics.CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request):
+        data = request.data.dict()
+        data['created_by'] = request.user
+        job = Jobs.objects.get(jid=data['job'])
+        serilized_data = self.serializer_class(data=data)
+        if serilized_data.is_valid():
+            serilized_data.save()
+            return Response({"Success": True, "Payments": serilized_data.data})
+        return Response({"Success": False, "Errors": serilized_data.errors})
 
 class PaymentUpdateDistroy(PartialUpdateDestroyView):
     queryset = Payments.objects.all()
