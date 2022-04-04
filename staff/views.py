@@ -168,9 +168,8 @@ class CreatePaymentApi(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        data = request.data.dict()
+        data = request.data
         data['created_by'] = request.user
-        job = Jobs.objects.get(jid=data['job'])
         serilized_data = self.serializer_class(data=data)
         if serilized_data.is_valid():
             serilized_data.save()
