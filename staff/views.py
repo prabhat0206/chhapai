@@ -169,7 +169,7 @@ class CreatePaymentApi(generics.CreateAPIView):
 
     def post(self, request):
         data = request.data
-        data['created_by'] = request.user
+        data['created_by'] = request.user.id
         serilized_data = self.serializer_class(data=data)
         if serilized_data.is_valid():
             serilized_data.save()
