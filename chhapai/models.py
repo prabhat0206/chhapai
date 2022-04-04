@@ -90,6 +90,6 @@ class Payments(models.Model):
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
-        self.job.amount_paid += self.amount
+        self.job.amount_paid += int(self.amount)
         self.job.save()
         super(Payments, self).save(*args, **kwargs)
