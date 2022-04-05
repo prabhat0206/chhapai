@@ -41,6 +41,7 @@ class Jobs(models.Model):
     total_cost = models.IntegerField()
     overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     comitted_date = models.DateField()
+    dispatched_quantity = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)
     isDelivered = models.BooleanField(default=False)
     isEmailing = models.BooleanField(default=False)
@@ -75,6 +76,8 @@ class Challans(models.Model):
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
+        self.job.dispatched_quantity += self.dispatch_quantity
+        self.job.save()
         super(Challans, self).save(*args, **kwargs)
 
 
