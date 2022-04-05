@@ -70,6 +70,7 @@ class Challans(models.Model):
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     dispatch_quantity = models.IntegerField(default=0)
     quantity_per_pack = models.IntegerField(default=0)
+    notes = models.TextField(blank=True, null=True)
     date_time = models.DateTimeField(auto_now_add=True)
     no_of_packs = models.IntegerField(default=0)
     generated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=6)
