@@ -176,6 +176,16 @@ class CreatePaymentApi(generics.CreateAPIView):
             return Response({"Success": True, "Payments": serilized_data.data})
         return Response({"Success": False, "Errors": serilized_data.errors})
 
+
 class PaymentUpdateDistroy(PartialUpdateDestroyView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
+
+    def post(self, request):
+        data = request.data
+        data['generated_by'] = request.user.id
+        serilized_data = self.serializer_class(data=data)
+        if serilized_data.is_valid():
+            serilized_data.save()
+            return Response({"Success": True, "Challan": serilized_data.data})
+        return Response({"Success": False, "Errors": serilized_data.errors})
