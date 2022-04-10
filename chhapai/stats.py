@@ -15,8 +15,9 @@ class HomePageTopStatus(ListAPIView):
         pending_jobs = instance.annotate(no_assign_order=models.Count('midorder'))\
             .filter(no_assign_order=0).count()
         processing_jobs = instance.annotate(no_assign_order=models.Count('midorder'))\
-                .filter(no_assign_order__gt=0).filter(isCompleted=False).count()
-        late_job = instance.filter(isCompleted=False).filter(comitted_date__lt = date.today()).count()
+            .filter(no_assign_order__gt=0).filter(models.Q(midorder__isDone=False)).count()
+        late_job = instance.filter(models.Q(midorder__isDone=False)).filter(
+            comitted_date__lt=date.today()).count()
         payments = instance.annotate(no_assign_order=models.Count('payments'))\
             .filter(no_assign_order=0)
         pending_payments = payments.count()

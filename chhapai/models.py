@@ -34,12 +34,14 @@ class Jobs(models.Model):
     job_name = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField()
     quantity = models.IntegerField()
-    design = models.ImageField(upload_to = "designs/", null=True, blank=True)
+    design = models.ImageField(upload_to="designs/", null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
     unit_cost = models.IntegerField()
-    order_type = models.ForeignKey(OrderType, blank=True, null=True, on_delete=models.DO_NOTHING)
+    order_type = models.ForeignKey(
+        OrderType, blank=True, null=True, on_delete=models.DO_NOTHING)
     total_cost = models.IntegerField()
-    overseer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    overseer = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
     comitted_date = models.DateField()
     dispatched_quantity = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)
@@ -53,27 +55,33 @@ class Jobs(models.Model):
 class MidOrder(models.Model):
     mid = models.AutoField(primary_key=True)
     stage = models.ForeignKey(Group, on_delete=models.CASCADE)
-    expected_datetime = models.DateTimeField(blank=True, null=True)
+    expected_start_datetime = models.DateTimeField()
+    expected_complete_datetime = models.DateTimeField(blank=True, null=True)
     notes = models.TextField(null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(
+        Orders, on_delete=models.CASCADE, null=True, blank=True)
     isDone = models.BooleanField(default=False)
-    assigned_staff = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    assigned_staff = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
         super(MidOrder, self).save(*args, **kwargs)
 
+
 class Challans(models.Model):
     cid = models.AutoField(primary_key=True)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(
+        Orders, on_delete=models.CASCADE, null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     dispatch_quantity = models.IntegerField(default=0)
     quantity_per_pack = models.IntegerField(default=0)
     notes = models.TextField(blank=True, null=True)
     date_time = models.DateTimeField(auto_now_add=True)
     no_of_packs = models.IntegerField(default=0)
-    generated_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=6)
+    generated_by = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, default=6)
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
@@ -84,16 +92,23 @@ class Challans(models.Model):
 
 class Payments(models.Model):
     pid = models.AutoField(primary_key=True)
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(
+        Orders, on_delete=models.CASCADE, null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE)
     amount = models.CharField(max_length=255)
     date_time = models.DateTimeField(auto_now_add=True)
     payment_method = models.CharField(max_length=255, default="Cash")
     payment_note = models.TextField(blank=True, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=6)
+    created_by = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, default=6)
 
     def save(self, *args, **kwargs):
         self.order = self.job.order
         self.job.amount_paid += int(self.amount)
         self.job.save()
         super(Payments, self).save(*args, **kwargs)
+
+
+class GroupExtension(models.Model):
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
+    completion_time = models.IntegerField(default=240)

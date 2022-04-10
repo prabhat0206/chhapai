@@ -9,6 +9,7 @@ from .serializer import *
 from chhapai.serializer import UserSerializer, UserSerializerWithGroup
 from django.contrib.auth.models import Group
 from staff.models import User
+from datetime import timedelta
 
 
 class UserStaffView(generics.ListAPIView):
@@ -113,11 +114,23 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
             instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
-            for midorder_set in json.loads(data_for_change['midorders']):
-                midorder_set['job'] = pk
-                new_midorder = MidOrderVerndorSerializer(data=midorder_set)
+            midorder_sets = json.loads(data_for_change['midorders'])
+            stage_ids = []
+            for stage_id in midorder_sets:
+                stage_ids.append(stage_id['stage'])
+            stages = Group.objects.filter(id__in=stage_ids)
+            start_time = stages[0].midorder_set.last().expected_start_datetime
+            for midorder in midorder_sets:
+                midorder['job'] = pk
+                stage_time = stages.get(id=midorder['stage']).groupextension.completion_time
+                expected_start_datetime = start_time + timedelta(minutes=stage_time)
+                midorder['expected_start_datetime'] = expected_start_datetime
+                if 'expected_complete_datetime' not in midorder:
+                    midorder['expected_complete_datetime'] = expected_start_datetime + timedelta(minutes=stage_time)
+                new_midorder = MidOrderVerndorSerializer(data=midorder)
                 if new_midorder.is_valid():
                     new_midorder.save()
+                    start_time = expected_start_datetime
                 else:
                     return Response({"Success": False, "Error": new_midorder.errors})
             return Response({"Success": True})
@@ -139,8 +152,20 @@ class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
 class AddGroupAPI(generics.CreateAPIView):
 
     queryset = Group.objects.all()
-    serializer_class = StagesSerializer
+    serializer_class = AddStage
     permission_classes = [IsAdminUser, ]
+
+    def post(self, request):
+        serialized = self.serializer_class(data=request.data)
+        if serialized.is_valid():
+            serialized.save()
+            request.data['groupextension']['group'] = serialized.data['id']
+            extension = GroupExtensionSerializer(
+                data=request.data['groupextension'])
+            if extension.is_valid():
+                extension.save()
+            return Response({"Success": True, "Stage": serialized.data})
+        return Response({"Success": True, "Error": serialized.errors})
 
 
 class GetGroupsAPI(generics.ListAPIView):
@@ -164,7 +189,6 @@ class CreateChallanApi(generics.CreateAPIView):
             serilized_data.save()
             return Response({"Success": True, "Challan": serilized_data.data})
         return Response({"Success": False, "Errors": serilized_data.errors})
-
 
 
 class ChallanUpdateDistroy(PartialUpdateDestroyView):

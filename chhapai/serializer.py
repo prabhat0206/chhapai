@@ -41,7 +41,21 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
+class GroupExtensionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupExtension
+        exclude = ['group', 'id']
+
+
+class AddStage(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
 class StagesSerializer(serializers.ModelSerializer):
+    groupextension = GroupExtensionSerializer()
+
     class Meta:
         model = Group
         exclude = ['permissions']
@@ -53,7 +67,7 @@ class UserSerializerWithGroup(UserSerializer):
 
 class StagesSerializerWithCount(StagesSerializer):
     jobs = serializers.SerializerMethodField()
-    
+
     def get_jobs(self, instance):
         return instance.midorder_set.filter(isDone=False).count()
 
@@ -61,6 +75,7 @@ class StagesSerializerWithCount(StagesSerializer):
 class MidOrderSerializer(serializers.ModelSerializer):
     stage = StagesSerializer()
     assigned_staff = UserSerializer()
+
     class Meta:
         model = MidOrder
         fields = '__all__'
@@ -110,4 +125,3 @@ class ChallanSerializer(serializers.ModelSerializer):
 
 class ChallanSerializerwithJob(ChallanSerializer):
     job = JobDetailsSerializer()
-

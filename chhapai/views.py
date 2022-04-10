@@ -60,7 +60,7 @@ class ProccessingOrder(generics.ListAPIView):
     def get_queryset(self, *args, **kwargs):
         return super(ProccessingOrder, self).get_queryset(*args, **kwargs)\
             .annotate(no_assign_order=models.Count('midorder'))\
-            .filter(no_assign_order__gt=0).filter(isCompleted=False)
+            .filter(no_assign_order__gt=0).filter(models.Q(midorder__isDone=False))
 
 
 class CompletedOrder(generics.ListAPIView):

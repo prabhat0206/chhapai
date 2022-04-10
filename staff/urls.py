@@ -16,5 +16,6 @@ urlpatterns = [
     path('challan', CreateChallanApi.as_view(), name='challan_create'),
     path('challan/<int:pk>', ChallanUpdateDistroy.as_view(), name='challan_update'),
     path('payment', CreatePaymentApi.as_view(), name='payment_create'),
-    path('payment/<int:pk>', PaymentUpdateDistroy.as_view(), name='payment')
+    path('payment/<int:pk>', PaymentUpdateDistroy.as_view(), name='payment'),
+    path('stage', AddGroupAPI.as_view(), name='add_stage')
 ]
