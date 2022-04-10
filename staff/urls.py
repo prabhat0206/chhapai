@@ -19,4 +19,5 @@ urlpatterns = [
     path('payment/<int:pk>', PaymentUpdateDistroy.as_view(), name='payment'),
     path('stage', AddGroupAPI.as_view(), name='add_stage'),
     path('stage/<int:pk>', DeleteGroupAPI.as_view(), name='delete_stage'),
+    path('overseer', OverseerView.as_view(), name='overseer'),
 ]

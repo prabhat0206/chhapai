@@ -15,10 +15,17 @@ from datetime import timedelta
 class UserStaffView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAdminUser, ]
 
     def get(self, request, *args, **kwargs):
         data = self.get_queryset()
         return Response({'results': self.serializer_class(data, many=True).data})
+
+
+class OverseerView(generics.ListAPIView):
+    queryset = User.objects.all().filter(staff=True)
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser, ]
 
 
 class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
