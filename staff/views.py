@@ -168,6 +168,13 @@ class AddGroupAPI(generics.CreateAPIView):
         return Response({"Success": True, "Error": serialized.errors})
 
 
+class DeleteGroupAPI(PartialUpdateDestroyView):
+
+    queryset = Group.objects.all()
+    serializer_class = AddStage
+    permission_classes = [IsAdminUser, ]
+
+
 class GetGroupsAPI(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = StagesSerializer
