@@ -44,7 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
 class GroupExtensionSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupExtension
-        exclude = ['group', 'id']
+        fields = '__all__'
 
 
 class AddStage(serializers.ModelSerializer):
