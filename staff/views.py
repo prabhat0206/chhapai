@@ -45,11 +45,14 @@ class UserUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser, ]
+    permission_classes = [IsAuthenticated, ]
     response_serializer = UserSerializerWithGroup
 
     def update(self, request, pk):
-        instance = self.get_object()
+        if request.user.superuser:
+            instance = self.get_object()
+        else:
+            instance = request.user
         data_for_change = request.data
         serialized = self.serializer_class(
             instance, data=data_for_change, partial=True)
