@@ -48,10 +48,12 @@ class Last5Details(ListAPIView):
         orders = OrderSerializer(self.get_queryset()[:5], many=True).data
         jobs = JobSerializer(Jobs.objects.all().order_by('-jid')[:5], many=True).data
         for_deliver_today = JobSerializer(Jobs.objects.all().order_by('-jid').filter(comitted_date = date.today())[:5], many=True).data
+        challans = ChallanSerializer(Challans.objects.all().order_by('-cid')[:5], many=True).data
         last5 = {
             "orders": orders,
             "jobs": jobs,
-            "for_deliver_today": for_deliver_today
+            "for_deliver_today": for_deliver_today,
+            "challans": challans
         }
         return Response({"Success": True, "last5": last5})
         
