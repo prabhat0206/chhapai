@@ -20,5 +20,4 @@ urlpatterns = [
     path('stage', AddGroupAPI.as_view(), name='add_stage'),
     path('stage/<int:pk>', DeleteGroupAPI.as_view(), name='delete_stage'),
     path('overseer', OverseerView.as_view(), name='overseer'),
-    path('update_profile', ProfileUpdate.as_view(), name='update_profile'),
 ]
