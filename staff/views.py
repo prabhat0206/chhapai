@@ -10,6 +10,30 @@ from chhapai.serializer import UserSerializer, UserSerializerWithGroup
 from django.contrib.auth.models import Group
 from staff.models import User
 from datetime import timedelta
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+
+
+class LoginToken(ObtainAuthToken):
+
+    def post(self, request):
+        serialized = self.serializer_class(
+            data=request.data, context={'request': request})
+        if serialized.is_valid():
+            user = serialized.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
+            serialized_user = UserSerializer(user).data
+            serialized_user['permissions'] = dict()
+            groups = Group.objects.all()
+            for group in groups:
+                if group.name != "admin":
+                    if group in user.groups.all():
+                        serialized_user['permissions'][group.name] = True
+                    else:
+                        serialized_user['permissions'][group.name] = False
+            del serialized_user['password'], serialized_user["groups"]
+            return Response({"Success": True, "token": token.key, "user": serialized_user})
+        return Response({"Success": False, "Error": "Invalid login credentials"})
 
 
 class UserStaffView(generics.ListAPIView):
