@@ -31,7 +31,7 @@ class LoginToken(ObtainAuthToken):
                         serialized_user['permissions'][group.name] = True
                     else:
                         serialized_user['permissions'][group.name] = False
-            del serialized_user['password'], serialized_user["groups"]
+            del serialized_user["groups"]
             return Response({"Success": True, "token": token.key, "user": serialized_user})
         return Response({"Success": False, "Error": "Invalid login credentials"})
 
