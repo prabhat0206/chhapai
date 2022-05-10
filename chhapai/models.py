@@ -112,3 +112,4 @@ class Payments(models.Model):
 class GroupExtension(models.Model):
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
     completion_time = models.IntegerField(default=240)
+    quality_checks = models.TextField(null=True, blank=True)
