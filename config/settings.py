@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import django_heroku
 from pathlib import Path
 from dotenv import load_dotenv
 import os
@@ -86,12 +85,8 @@ AUTH_USER_MODEL = 'staff.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -178,6 +173,3 @@ EMAIL_HOST_PASSWORD = os.environ.get("PASSWORD")
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL")
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'IN'
-
-
-django_heroku.settings(locals())
