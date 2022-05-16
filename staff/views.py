@@ -9,7 +9,7 @@ from .serializer import *
 from chhapai.serializer import UserSerializer, UserSerializerWithGroup
 from django.contrib.auth.models import Group
 from staff.models import User
-from datetime import timedelta
+from datetime import datetime, timedelta
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
@@ -153,7 +153,10 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
             for stage_id in midorder_sets:
                 stage_ids.append(stage_id['stage'])
             stages = Group.objects.filter(id__in=stage_ids)
-            start_time = stages[0].midorder_set.last().expected_start_datetime
+            if stages:
+                start_time = stages[0].midorder_set.last().expected_start_datetime
+            else:
+                state_time = datetime.now()
             for midorder in midorder_sets:
                 midorder['job'] = pk
                 stage_time = stages.get(id=midorder['stage']).groupextension.completion_time
