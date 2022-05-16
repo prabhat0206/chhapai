@@ -153,10 +153,13 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
             for stage_id in midorder_sets:
                 stage_ids.append(stage_id['stage'])
             stages = Group.objects.filter(id__in=stage_ids)
-            if len(stages) > 0:
-                start_time = stages[0].midorder_set.last().expected_start_datetime
+            if stages[0].midorder_set.last():
+                if stages[0].midorder_set.last().expected_start_datetime > datetime.now():
+                    start_time = stages[0].midorder_set.last().expected_start_datetime
+                else:
+                    start_time = datetime.now()
             else:
-                state_time = datetime.now()
+                start_time = datetime.now()
             for midorder in midorder_sets:
                 midorder['job'] = pk
                 stage_time = stages.get(id=midorder['stage']).groupextension.completion_time
