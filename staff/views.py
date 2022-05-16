@@ -255,3 +255,9 @@ class CreatePaymentApi(generics.CreateAPIView):
 class PaymentUpdateDistroy(PartialUpdateDestroyView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
+
+
+class OrderTypeCreate(generics.CreateAPIView):
+    queryset = OrderType
+    serializer_class = OrderTypeSerializer
+    permission_classes = [IsAdminUser]
