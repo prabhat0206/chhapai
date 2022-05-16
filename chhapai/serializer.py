@@ -85,6 +85,8 @@ class JobSerializerWithMid(JobSerializer):
     midorder_set = MidOrderSerializer(many=True)
     order_type = OrderTypeSerializer()
 
+class JobWithFullDetails(JobSerializerWithMid):
+    order = OrderSerializer()
 
 class OrderSerializerWithJobs(OrderSerializer):
     jobs_set = JobSerializerWithMid(many=True)

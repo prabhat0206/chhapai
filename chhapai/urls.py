@@ -20,5 +20,6 @@ urlpatterns = [
     path('search_job/<key>', JobSearchAPI.as_view(), name='search_job'),
     path('search_user/<key>', UserSearchAPI.as_view(), name='search_user'),
     path('challan/<int:pk>', ChallanPdfResponse.as_view(), name='challans_pdf'),
-    path('payment/pdf/<int:pk>', PaymentPdfResponse.as_view(), name='payment_pdf')
+    path('payment/pdf/<int:pk>', PaymentPdfResponse.as_view(), name='payment_pdf'),
+    path('job/pdf/<int:pk>', JobDetailPdfResponse.as_view(), name='job_detail_pdf'),
 ]

@@ -171,3 +171,18 @@ class PaymentPdfResponse(DetailView):
         data['date_time'] = instance.date_time.strftime('%Y-%m-%d, %H:%M:%S')
         pdf = get_pdf_from_template(self.template_name, data)
         return HttpResponse(pdf, content_type='application/pdf')
+
+
+class JobDetailPdfResponse(DetailView):
+    queryset = Jobs.objects.all()
+    template_name = "details.html"
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        data = JobWithFullDetails(instance).data
+        data['order_date_time'] = instance.order.date_time.strftime(
+            '%Y-%m-%d, %H:%M:%S')
+        pdf = get_pdf_from_template(self.template_name, data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+

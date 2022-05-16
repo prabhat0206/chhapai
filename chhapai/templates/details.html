@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+
+    <title>Document</title>
+    <style>
+        body {
+            padding: 15px;
+            margin: 0;
+            font-family: 'Roboto', sans-serif !important;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;          
+        }
+  
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+  
+        th {
+          background-color: #dddddd;
+        }
+  
+        h2, h3, h4, P {
+            margin: 0;
+        }
+
+        h3, h4 {
+          padding: 5px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div style="display: flex; justify-content: space-between">
+            <div>
+            <img src="https://dl.dropboxusercontent.com/s/00cq4kkrndl4eax/Logo.png?dl=0" alt="CHHAPAI" width="200px" />
+            <div style="display: flex; justify-content: space-between">
+                <div style="display: flex; flex-direction: column; margin-left: 5px; margin-top: 10px;">
+                    <h2 style="font-size: 22px; margin-top: 10px; padding: 0;font-weight: bold;">  
+                        {{order.customer_name}}
+                    </h2>
+                    <p style="padding: 0; font-size: 18px; font-weight: 500">{{order.billing_address}}</p>
+                    <!-- <p style="padding: 0; font-size: 18px; font-weight: 500">DELHI</p>
+                    <p style="padding: 0; font-size: 18px; font-weight: 500">DL</p>
+                    <p style="padding: 0; font-size: 18px; font-weight: 500">813044009</p> -->
+                </div>
+            </div>
+            </div>
+            <div style="display: flex; flex-direction: column">
+            <h2 style="padding-bottom: 10px; font-size: 32px; font-weight: 700;">Order Progress</h2>
+            <div style="margin-top: 5px">
+                <p style="margin: 0 5px; padding: 0; font-size: 18px"><b> Order no.: </b> {{order.oid}}-{{jid}}</p>
+                <p id="date" style="margin: 0 5px; padding: 0; font-size: 18px"><b> Order date: </b> {{order_date_time}}</p>
+                <!-- <p style="margin: 0 5px; padding: 0; font-size: 18px"><b> Tentative date: </b> {{date_time}}</p> -->
+            </div>
+            </div>
+        </div>
+
+        <table style="border: 1px solid gray; margin-bottom: 20px; margin-top: 35px">
+            <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th>Description</th>
+                <th>Quantity</th>
+            </tr>
+            <tr>
+                <td>{{jid}}</td>
+                <td>{{item}}</td>
+                <td>{{description}}</td>
+                <td>{{quantity}}</td>
+            </tr>
+        </table>
+
+        <div style="display: flex; flex-direction: column" >
+            <h2 style="font-size: 25px; margin-top: 30px; padding: 0;font-weight: bold; margin-bottom: 10px;">  
+                Job Note:
+            </h2>
+            
+            <table style="border: 1px solid gray; margin-bottom: 20px">
+                <tr>
+                    <th>Stage</th>
+                    <th>Calculated End Time</th>
+                    <th>Note</th>
+                </tr>
+                {% for mid in midorder_set %}
+                <tr>
+                    <td>{{mid.stage.name}}</td>
+                    <td>{{mid.expected_complete_datetime}}</td>
+                    <td>{{notes}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <div style="display: flex; flex-direction: column" >        
+            <h2 style="font-size: 25px; margin-top: 30px; padding: 0;font-weight: bold; margin-bottom: 10px;">  
+                Quality Checks:
+            </h2>
+
+            <table style="border: 1px solid gray; margin-bottom: 20px">
+                <tr>
+                    <th>Stage</th>
+                    <th>Check</th>
+                </tr>
+                {% for mid in midorder_set %}
+                <tr>
+                    <td>{{mid.stage.name}}</td>
+                    <td>{{mid.stage.groupextension.quality_checks}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>
