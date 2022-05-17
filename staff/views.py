@@ -1,3 +1,4 @@
+from ast import Is
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -69,7 +70,7 @@ class UserUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
     response_serializer = UserSerializerWithGroup
 
     def update(self, request, pk):
@@ -138,7 +139,7 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
     queryset = Jobs.objects.all()
     serializer_class = JobSerializer
     parser_classes = (MultiPartParser, FormParser, )
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def post(self, request, pk):
         instance = self.get_queryset().get(jid=pk)
@@ -181,6 +182,7 @@ class JobUpdateDestroyAPI(PartialUpdateDestroyView):
 
     queryset = Jobs.objects.all()
     serializer_class = JobSerializerWithOrderDetails
+    permission_classes = [IsAdminUser]
 
 
 class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
@@ -241,12 +243,13 @@ class CreateChallanApi(generics.CreateAPIView):
 class ChallanUpdateDistroy(PartialUpdateDestroyView):
     queryset = Challans.objects.all()
     serializer_class = ChallanSerializer
+    permission_classes = [IsAdminUser]
 
 
 class CreatePaymentApi(generics.CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def post(self, request):
         data = request.data
@@ -261,6 +264,7 @@ class CreatePaymentApi(generics.CreateAPIView):
 class PaymentUpdateDistroy(PartialUpdateDestroyView):
     queryset = Payments.objects.all()
     serializer_class = PaymentSerializer
+    permission_classes = [IsAdminUser]
 
 
 class OrderTypeCreate(generics.CreateAPIView):

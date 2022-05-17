@@ -1,7 +1,8 @@
+from requests import request
 from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .serializer import *
 from .form import *
 from staff.models import User
@@ -30,21 +31,21 @@ class CheckToken(generics.ListAPIView):
 class OrderView(generics.ListAPIView):
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerWithJobs
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class OrderViewWithStatus(generics.ListAPIView):
 
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerwithStatus
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class PendingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializerWithOrderDetails
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def get_queryset(self,  *args, **kwargs):
         return super(PendingOrder, self).get_queryset(*args, **kwargs)\
@@ -55,7 +56,7 @@ class ProccessingOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializerWithOrderDetails
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def get_queryset(self, *args, **kwargs):
         return super(ProccessingOrder, self).get_queryset(*args, **kwargs)\
@@ -67,7 +68,7 @@ class CompletedOrder(generics.ListAPIView):
 
     queryset = Jobs.objects.all().order_by('-jid')
     serializer_class = JobSerializerWithOrderDetails
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
     def get_queryset(self, *args, **kwargs):
         return super(CompletedOrder, self).get_queryset(*args, **kwargs)\
@@ -79,14 +80,14 @@ class UserViewAPI(generics.ListAPIView):
 
     queryset = User.objects.all().order_by('-id')
     serializer_class = UserSerializerWithGroup
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class PaymentViewAPI(generics.ListAPIView):
 
     queryset = Payments.objects.all().order_by('-pid')
     serializer_class = PaymentSerializerWithJob
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class StageViewAPI(generics.ListCreateAPIView):
@@ -100,14 +101,17 @@ class ChallansAPI(generics.ListCreateAPIView):
 
     queryset = Challans.objects.all().order_by('-cid')
     serializer_class = ChallanSerializerwithJob
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAdminUser, ]
 
 
 class MyJobsApi(generics.ListAPIView):
 
-    queryset = Jobs.objects.all().order_by('-jid')
+    queryset = Jobs.objects.all()
     serializer_class = JobSerializerWithStatus
     permission_classes = [IsAuthenticated, ]
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('-jid').filter(overseer=self.request.user)
 
 
 class OrderTypeApi(generics.ListAPIView):
