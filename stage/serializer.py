@@ -6,8 +6,7 @@ class JobWithPermission(ModelSerializer):
     
     class Meta:
         model = Jobs
-        exclude = ('unit_cost', 'isCompleted', 'isDelivered',
-                   'isEmailing', 'total_cost', 'notes', 'overseer', 'design')
+        exclude = ('unit_cost', 'isDelivered', 'isEmailing', 'total_cost', 'notes', 'overseer', 'design')
 
 class MidOrderWithPermission(ModelSerializer):
     job = JobWithPermission()
