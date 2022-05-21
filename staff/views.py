@@ -182,7 +182,7 @@ class JobUpdateDestroyAPI(PartialUpdateDestroyView):
 
     queryset = Jobs.objects.all()
     serializer_class = JobSerializerWithOrderDetails
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 
 class MidOrderUpdateDestroyAPI(PartialUpdateDestroyView):
