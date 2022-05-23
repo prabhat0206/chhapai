@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ["chhapai.pythonanywhere.com", "localhost", "0.0.0.0"]
 INSTALLED_APPS = [
     'chhapai.apps.ChhapaiConfig',
     'staff.apps.StaffConfig',
+    'adminn.apps.AdminnConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -152,6 +153,7 @@ USE_TZ = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "static"
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')

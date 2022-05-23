@@ -30,6 +30,7 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.superuser = True
         user.staff = True
+        user.vendor = True
 
         user.save()
         return user
@@ -55,6 +56,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     superuser = models.BooleanField(default=False)
+    vendor = models.BooleanField(default=False)
+    user_of = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['ph_number', 'name', 'email']
@@ -81,3 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.staff
+
+    @property
+    def is_vendor(self):
+        return self.vendor

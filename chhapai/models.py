@@ -16,6 +16,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class OrderType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, unique=True)
+    vendor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 
 class Orders(models.Model):
@@ -25,6 +26,7 @@ class Orders(models.Model):
     tax = models.FloatField(default=0.00)
     delivery_date = models.DateField()
     billing_address = models.TextField()
+    vendor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
 
 
 class Jobs(models.Model):
@@ -113,3 +115,4 @@ class GroupExtension(models.Model):
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
     completion_time = models.IntegerField(default=240)
     quality_checks = models.TextField(null=True, blank=True)
+    vendor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

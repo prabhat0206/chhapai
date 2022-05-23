@@ -52,6 +52,9 @@ class OverseerView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser, ]
 
+    def get_queryset(self):
+        return super().get_queryset().filter(models.Q(user_of=self.request.user) | models.Q(id=self.request.user.id))
+
 
 class PartialUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
@@ -101,7 +104,9 @@ class UserAddView(generics.CreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     def post(self, request, *args, **kwargs):
-        new_user = self.serializer_class(data=request.data)
+        data = request.data
+        data["user_of"] = request.user.id
+        new_user = self.serializer_class(data=data)
         if new_user.is_valid():
             new_user.save()
             user = User.objects.get(id=new_user.data['id'])
@@ -119,7 +124,9 @@ class AddOrderAPi(generics.CreateAPIView):
     permission_classes = [IsAdminUser, ]
 
     def post(self, request):
-        new_order = self.serializer_class(data=request.data)
+        data = request.data
+        data["vendor"] = request.user.id
+        new_order = self.serializer_class(data=data)
         if new_order.is_valid():
             new_order.save()
             order = new_order.data
@@ -153,7 +160,8 @@ class AssignOrderJob(generics.CreateAPIView, generics.UpdateAPIView):
             stage_ids = []
             for stage_id in midorder_sets:
                 stage_ids.append(stage_id['stage'])
-            stages = Group.objects.filter(id__in=stage_ids)
+            stages = Group.objects.filter(models.Q(groupextension__vendor=request.user) | models.Q(
+                groupextension__vendor=request.user.user_of)).filter(id__in=stage_ids)
             if stages[0].midorder_set.last():
                 if stages[0].midorder_set.last().expected_start_datetime > timezone.localtime(timezone.now()):
                     start_time = stages[0].midorder_set.last().expected_start_datetime
@@ -202,6 +210,7 @@ class AddGroupAPI(generics.CreateAPIView):
         if serialized.is_valid():
             serialized.save()
             request.data['groupextension']['group'] = serialized.data['id']
+            request.data['groupextension']['vendor'] = request.user.id
             extension = GroupExtensionSerializer(
                 data=request.data['groupextension'])
             if extension.is_valid():
@@ -221,6 +230,9 @@ class GetGroupsAPI(generics.ListAPIView):
     queryset = Group.objects.all()
     serializer_class = StagesSerializer
     permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(groupextension__vendor=self.request.user)
 
     def get(self, request):
         return Response({"Success": True, "Groups": self.serializer_class(self.get_queryset(), many=True).data})
@@ -271,3 +283,12 @@ class OrderTypeCreate(generics.CreateAPIView):
     queryset = OrderType
     serializer_class = OrderTypeSerializer
     permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        data = request.data
+        data["vendor"] = request.user.id
+        serialized = self.serializer_class(data=data)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data)
+        return Response(serialized.errors)

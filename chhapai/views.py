@@ -9,14 +9,7 @@ from staff.models import User
 from django.views.generic import DetailView
 from django.http import HttpResponse
 from staff.pdfgen import get_pdf_from_template
-# from django.utils.decorators import method_decorator
-# from config.common import allowed_users
 from django.db.models import Q
-
-
-# class IsAdminUser(BasePermission):
-#     def has_permission(self, request, view):
-#         return bool(request.user and request.user.is_staff)
 
 
 class CheckToken(generics.ListAPIView):
@@ -29,16 +22,22 @@ class CheckToken(generics.ListAPIView):
 
 
 class OrderView(generics.ListAPIView):
-    queryset = Orders.objects.all().order_by('-oid')
+    queryset = Orders.objects.all()
     serializer_class = OrderSerializerWithJobs
     permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(vendor=self.request.user).order_by('-oid')
 
 
 class OrderViewWithStatus(generics.ListAPIView):
 
-    queryset = Orders.objects.all().order_by('-oid')
+    queryset = Orders.objects.all()
     serializer_class = OrderSerializerwithStatus
     permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(vendor=self.request.user).order_by('-oid')
 
 
 class PendingOrder(generics.ListAPIView):
@@ -49,6 +48,7 @@ class PendingOrder(generics.ListAPIView):
 
     def get_queryset(self,  *args, **kwargs):
         return super(PendingOrder, self).get_queryset(*args, **kwargs)\
+            .filter(order__vendor=self.request.user)\
             .annotate(no_assign_order=models.Count('midorder')).filter(no_assign_order=0)
 
 
@@ -60,6 +60,7 @@ class ProccessingOrder(generics.ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         return super(ProccessingOrder, self).get_queryset(*args, **kwargs)\
+            .filter(order__vendor=self.request.user)\
             .annotate(no_assign_order=models.Count('midorder'))\
             .filter(no_assign_order__gt=0).filter(models.Q(midorder__isDone=False))
 
@@ -72,6 +73,7 @@ class CompletedOrder(generics.ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         return super(CompletedOrder, self).get_queryset(*args, **kwargs)\
+            .filter(order__vendor=self.request.user)\
             .annotate(no_assign_order=models.Count('midorder'))\
             .filter(no_assign_order__gt=0).filter(~models.Q(midorder__isDone=False))
 
@@ -82,12 +84,18 @@ class UserViewAPI(generics.ListAPIView):
     serializer_class = UserSerializerWithGroup
     permission_classes = [IsAdminUser, ]
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user_of=self.request.user)
+
 
 class PaymentViewAPI(generics.ListAPIView):
 
     queryset = Payments.objects.all().order_by('-pid')
     serializer_class = PaymentSerializerWithJob
     permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(order__vendor=self.request.user)
 
 
 class StageViewAPI(generics.ListCreateAPIView):
@@ -96,12 +104,18 @@ class StageViewAPI(generics.ListCreateAPIView):
     serializer_class = StagesSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def get_queryset(self):
+        return super().get_queryset().filter(groupextension__vendor=self.request.user)
+
 
 class ChallansAPI(generics.ListCreateAPIView):
 
     queryset = Challans.objects.all().order_by('-cid')
     serializer_class = ChallanSerializerwithJob
     permission_classes = [IsAdminUser, ]
+
+    def get_queryset(self):
+        return super().get_queryset().filter(order__vendor=self.request.user)
 
 
 class MyJobsApi(generics.ListAPIView):
@@ -120,6 +134,9 @@ class OrderTypeApi(generics.ListAPIView):
     serializer_class = OrderTypeSerializer
     permission_classes = [IsAuthenticated, ]
 
+    def get_queryset(self):
+        return super().get_queryset().filter(vendor=self.request.user)
+
 
 class UserSearchAPI(generics.ListAPIView):
 
@@ -129,6 +146,7 @@ class UserSearchAPI(generics.ListAPIView):
 
     def get(self, request, key):
         instance = self.get_queryset()\
+            .filter(user_of=request.user)\
             .filter(Q(name__icontains=key) | Q(username__icontains=key) | Q(email__icontains=key) | Q(ph_number__icontains=key))
         serialized = self.serializer_class(instance, many=True).data
         paginated = self.paginate_queryset(serialized)
@@ -143,6 +161,7 @@ class JobSearchAPI(generics.ListAPIView):
 
     def get(self, request, key):
         instance = self.get_queryset()\
+            .filter(order__vendor=self.request.user)\
             .filter(Q(job_name__icontains=key) | Q(item__icontains=key) | Q(description__icontains=key) | Q(order__customer_name__icontains=key))
         serialized = self.serializer_class(instance, many=True).data
         paginated = self.paginate_queryset(serialized)
