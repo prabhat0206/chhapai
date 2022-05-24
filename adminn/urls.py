@@ -19,4 +19,5 @@ urlpatterns = [
     path('order_by_vendor/<int:vendor>', OrdersByVendor.as_view(), name='order_by'),
     path('add_vendor', AddVendor.as_view(), name='add_vendor'),
     path('assign_order/<int:oid>', AssignOrder.as_view(), name='assign_order'),
+    path('vendors', AllVendors.as_view(), name='vendors'),
 ]
