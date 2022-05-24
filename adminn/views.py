@@ -188,7 +188,7 @@ class AssignOrder(APIView):
 class OrdersByVendor(generics.ListAPIView):
 
     queryset = Orders.objects.all()
-    serializer_class = OrderSerializerWithJobs()
+    serializer_class = OrderSerializerWithJobs
     permission_classes = [IsSuperUser]
 
     def get_queryset(self):
@@ -197,7 +197,11 @@ class OrdersByVendor(generics.ListAPIView):
 
 class AddVendor(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer()
+    serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
 
 
+class AllVendors(generics.ListAPIView):
+    queryset = User.objects.all().filter(vendor=True)
+    serializer_class = UserSerializer
+    permission_classes = [IsSuperUser]
