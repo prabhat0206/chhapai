@@ -5,7 +5,8 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime
 from rest_framework.response import Response
-from chhapai.serializer import UserSerializerWithGroup
+from chhapai.serializer import JobSerializerWithOrderDetails, UserSerializerWithGroup
+from staff.serializer import MidOrderVerndorSerializer
 from .serializer import MidOrderWithPermission
 
 
@@ -56,3 +57,38 @@ class EditProfile(generics.UpdateAPIView):
             self.perform_update(serialized)
             return Response({"Success": True, "data": serialized.data})
         return Response({"Success": False, "Errors": str(serialized.errors)})
+
+
+class MidOrderUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = MidOrder.objects.all()
+    serializer_class = MidOrderVerndorSerializer
+
+    def update(self, request, pk):
+        instance = self.get_object()
+        data_for_change = request.data
+        serialized = self.serializer_class(
+            instance, data=data_for_change, partial=True)
+        if serialized.is_valid():
+            self.perform_update(serialized)
+            return Response({"Success": True, "data": MidOrderWithPermission(instance).data})
+        return Response({"Success": False, "Errors": str(serialized.errors)})
+
+
+class JobUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Jobs.objects.all()
+    serializer_class = JobSerializerWithOrderDetails
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, pk):
+        instance = self.get_object()
+        data_for_change = request.data
+        serialized = self.serializer_class(
+            instance, data=data_for_change, partial=True)
+        if serialized.is_valid():
+            self.perform_update(serialized)
+            return Response({"Success": True, "data": MidOrderWithPermission(instance).data})
+        return Response({"Success": False, "Errors": str(serialized.errors)})
+
+
