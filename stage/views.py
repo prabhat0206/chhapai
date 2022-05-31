@@ -81,14 +81,14 @@ class JobUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobSerializerWithOrderDetails
     permission_classes = [IsAuthenticated]
 
-    def update(self, request, pk):
+    def update(self, request, mid, pk):
         instance = self.get_object()
         data_for_change = request.data
         serialized = self.serializer_class(
             instance, data=data_for_change, partial=True)
         if serialized.is_valid():
             self.perform_update(serialized)
-            return Response({"Success": True, "data": MidOrderWithPermission(instance).data})
+            return Response({"Success": True, "data": MidOrderWithPermission(instance.midorder_set.get(mid=mid)).data})
         return Response({"Success": False, "Errors": str(serialized.errors)})
 
 
