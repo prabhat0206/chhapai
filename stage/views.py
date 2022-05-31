@@ -63,6 +63,7 @@ class MidOrderUpdateDestroyAPI(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = MidOrder.objects.all()
     serializer_class = MidOrderVerndorSerializer
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, pk):
         instance = self.get_object()
