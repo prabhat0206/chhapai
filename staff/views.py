@@ -1,6 +1,6 @@
 from ast import Is
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from chhapai.models import *
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -14,6 +14,12 @@ from staff.models import User
 from datetime import datetime, timedelta
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+
+
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and (request.user.is_staff or request.user.is_vendor))
+
 
 class LoginToken(ObtainAuthToken):
 
@@ -48,7 +54,7 @@ class UserStaffView(generics.ListAPIView):
 
 
 class OverseerView(generics.ListAPIView):
-    queryset = User.objects.all().filter(staff=True)
+    queryset = User.objects.all().filter(staff=True).filter(vendor=False)
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser, ]
 

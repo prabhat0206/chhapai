@@ -2,7 +2,7 @@ from requests import request
 from rest_framework.response import Response
 from rest_framework import generics
 from .models import *
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from .serializer import *
 from .form import *
 from staff.models import User
@@ -11,6 +11,10 @@ from django.http import HttpResponse
 from staff.pdfgen import get_pdf_from_template
 from django.db.models import Q
 
+
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user and (request.user.is_staff or request.user.is_vendor))
 
 class CheckToken(generics.ListAPIView):
     queryset = Orders.objects
