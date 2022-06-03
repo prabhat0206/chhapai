@@ -280,7 +280,7 @@ class PaymentUpdateDistroy(PartialUpdateDestroyView):
 
 
 class OrderTypeCreate(generics.CreateAPIView):
-    queryset = OrderType
+    queryset = OrderType.objects.all()
     serializer_class = OrderTypeSerializer
     permission_classes = [IsAdminUser]
 
@@ -292,3 +292,8 @@ class OrderTypeCreate(generics.CreateAPIView):
             serialized.save()
             return Response(serialized.data)
         return Response(serialized.errors)
+
+class OrderTypeDestroy(generics.DestroyAPIView):
+    queryset = OrderType.objects.all()
+    serializer_class = OrderTypeSerializer
+    permission_classes = [IsAdminUser]

@@ -20,4 +20,5 @@ urlpatterns = [
     path('stage/<int:pk>', DeleteGroupAPI.as_view(), name='delete_stage'),
     path('overseer', OverseerView.as_view(), name='overseer'),
     path('order_type_add', OrderTypeCreate.as_view(), name='order_type_add'),
+    path('order_type_delete', OrderTypeDestroy.as_view(), name='order_type_delete'),
 ]
