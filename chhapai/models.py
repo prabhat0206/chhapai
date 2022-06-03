@@ -15,7 +15,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class OrderType(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     vendor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
 
