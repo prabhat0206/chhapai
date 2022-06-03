@@ -133,6 +133,7 @@ class OrderTypeApi(generics.ListAPIView):
     queryset = OrderType.objects.all()
     serializer_class = OrderTypeSerializer
     permission_classes = [IsAuthenticated, ]
+    pagination_class = None
 
     def get_queryset(self):
         return super().get_queryset().filter(vendor=self.request.user)
