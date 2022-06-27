@@ -8,6 +8,8 @@ from chhapai.serializer import *
 from chhapai.form import *
 from staff.models import User
 from django.db.models import Q
+from api.views import job_scheduler
+from rest_framework.decorators import api_view, permission_classes
 
 
 class IsSuperUser(BasePermission):
@@ -24,9 +26,26 @@ class CheckToken(generics.ListAPIView):
         return Response({"Success": True})
 
 
+@api_view(["GET"])
+@permission_classes([IsSuperUser])
+def update_database(request):
+    try:
+        job_scheduler()
+    except Exception as e:
+        print(e)
+        pass
+    return Response({"Success": True})
+
+
 class OrderView(generics.ListAPIView):
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerWithJobs
+    permission_classes = [IsSuperUser, ]
+
+
+class AssignVendor(generics.UpdateAPIView):
+    queryset = Orders.objects.all()
+    serializer_class = OrderSerializer
     permission_classes = [IsSuperUser, ]
 
 
@@ -84,7 +103,6 @@ class PaymentViewAPI(generics.ListAPIView):
     queryset = Payments.objects.all().order_by('-pid')
     serializer_class = PaymentSerializerWithJob
     permission_classes = [IsSuperUser, ]
-
 
 
 class StageViewAPI(generics.ListCreateAPIView):
@@ -174,7 +192,7 @@ class AddOrderAPi(generics.CreateAPIView):
 
 class AssignOrder(APIView):
 
-    permission_classes =  [IsSuperUser]
+    permission_classes = [IsSuperUser]
 
     def post(self, request, oid):
         order = Orders.objects.get(oid=oid)

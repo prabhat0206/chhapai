@@ -12,5 +12,6 @@ urlpatterns = [
     path('vendor/', include('staff.urls')),
     path('rest/', include('stage.urls')),
     path('admin/', include('adminn.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api_woo/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

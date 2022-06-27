@@ -24,9 +24,13 @@ class Orders(models.Model):
     customer_name = models.CharField(max_length=255)
     date_time = models.DateTimeField(auto_now_add=True)
     tax = models.FloatField(default=0.00)
-    delivery_date = models.DateField()
+    delivery_date = models.DateField(null=True, blank=True)
     billing_address = models.TextField()
+    shipping_address = models.TextField(null=True, blank=True)
+    woo_id = models.IntegerField(null=True, blank=True, unique=True)
+    woo_date = models.DateTimeField(null=True, blank=True)
     vendor = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    discount = models.IntegerField(default=0)
 
 
 class Jobs(models.Model):
@@ -44,7 +48,7 @@ class Jobs(models.Model):
     total_cost = models.IntegerField()
     overseer = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
-    comitted_date = models.DateField()
+    comitted_date = models.DateField(null=True, blank=True)
     dispatched_quantity = models.IntegerField(default=0)
     discount = models.IntegerField(default=0)
     isDelivered = models.BooleanField(default=False)

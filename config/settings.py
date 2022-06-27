@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-+(f^pgkbyy%!8ew+13x#bj-uq6wb#6!n&z_lypfzr#3xp^=@23
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["chhapai.pythonanywhere.com", "localhost", "0.0.0.0"]
+ALLOWED_HOSTS = ["chhapai.pythonanywhere.com", "localhost", "0.0.0.0", '127.0.0.1']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'chhapai.apps.ChhapaiConfig',
     'staff.apps.StaffConfig',
     'adminn.apps.AdminnConfig',
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [

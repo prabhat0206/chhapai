@@ -1,0 +1,128 @@
+{
+  "id": 41529,
+  "parent_id": 0,
+  "status": "processing",
+  "currency": "INR",
+  "version": "6.4.1",
+  "prices_include_tax": false,
+  "date_created": "2022-06-17T06:15:48",
+  "date_modified": "2022-06-17T06:30:50",
+  "discount_total": "0.00",
+  "discount_tax": "0.00",
+  "shipping_total": "0.00",
+  "shipping_tax": "0.00",
+  "cart_tax": "48.00",
+  "total": "448.00",
+  "total_tax": "48.00",
+  "customer_id": 41,
+  "order_key": "wc_order_hi92ylk4YPm6W",
+  "billing": {
+    "first_name": "Akshay",
+    "last_name": "Ahuja",
+    "company": "Robochamps",
+    "address_1": "Plot no 163, Industrail area, Phase 1",
+    "address_2": "",
+    "city": "chandigarh",
+    "state": "CH",
+    "postcode": "160002",
+    "country": "IN",
+    "email": "akshay@robochamps.co",
+    "phone": "859118111"
+  },
+  "shipping": {
+    "first_name": "Akshay",
+    "last_name": "Ahuja",
+    "company": "Robochamps",
+    "address_1": "Plot no 163, Industrail area, Phase 1",
+    "address_2": "",
+    "city": "chandigarh",
+    "state": "CH",
+    "postcode": "160002",
+    "country": "IN",
+    "phone": ""
+  },
+  "payment_method": "",
+  "payment_method_title": "",
+  "transaction_id": "",
+  "customer_ip_address": "",
+  "customer_user_agent": "",
+  "created_via": "admin",
+  "customer_note": "",
+  "date_completed": null,
+  "date_paid": "2022-06-17T06:30:50",
+  "cart_hash": "",
+  "number": "41529",
+  "meta_data": [
+    { "id": 135964, "key": "_new_order_email_sent", "value": "true" },
+    { "id": 135965, "key": "salesking_assigned_agent", "value": "null" }
+  ],
+  "line_items": [
+    {
+      "id": 3878,
+      "name": "Quick Cards",
+      "product_id": 12345,
+      "variation_id": 0,
+      "quantity": 100,
+      "tax_class": "12",
+      "subtotal": "400.00",
+      "subtotal_tax": "48.00",
+      "total": "400.00",
+      "total_tax": "48.00",
+      "taxes": [
+        { "id": 4, "total": "24", "subtotal": "24" },
+        { "id": 5, "total": "24", "subtotal": "24" }
+      ],
+      "meta_data": [
+        {
+          "id": 33564,
+          "key": "320 GSM Mont Blanc",
+          "value": "Both Side Printing",
+          "display_key": "320 GSM Mont Blanc",
+          "display_value": "Both Side Printing"
+        }
+      ],
+      "sku": "quick",
+      "price": 4,
+      "parent_name": null
+    }
+  ],
+  "tax_lines": [
+    {
+      "id": 3879,
+      "rate_code": "IN-6% CGST-1",
+      "rate_id": 4,
+      "label": "6% CGST",
+      "compound": false,
+      "tax_total": "24.00",
+      "shipping_tax_total": "0.00",
+      "rate_percent": 6,
+      "meta_data": []
+    },
+    {
+      "id": 3880,
+      "rate_code": "IN-6% SGST-2",
+      "rate_id": 5,
+      "label": "6% SGST",
+      "compound": false,
+      "tax_total": "24.00",
+      "shipping_tax_total": "0.00",
+      "rate_percent": 6,
+      "meta_data": []
+    }
+  ],
+  "shipping_lines": [],
+  "fee_lines": [],
+  "coupon_lines": [],
+  "refunds": [],
+  "payment_url": "https://chhapai.com/checkout/order-pay/41529/?pay_for_order=true&key=wc_order_hi92ylk4YPm6W",
+  "date_created_gmt": "2022-06-17T06:15:48",
+  "date_modified_gmt": "2022-06-17T06:30:50",
+  "date_completed_gmt": null,
+  "date_paid_gmt": "2022-06-17T06:30:50",
+  "currency_symbol": "₹",
+  "_links": {
+    "self": [{ "href": "https://chhapai.com/wp-json/wc/v3/orders/41529" }],
+    "collection": [{ "href": "https://chhapai.com/wp-json/wc/v3/orders" }],
+    "customer": [{ "href": "https://chhapai.com/wp-json/wc/v3/customers/41" }]
+  }
+}
