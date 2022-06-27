@@ -14,6 +14,7 @@ cssselect2==0.5.0
 dj-database-url==0.5.0
 Django==4.0.2
 django-cors-headers==3.11.0
+django-cron==0.6.0
 django-easy-pdf==0.1.1
 django-filter==21.1
 django-heroku==0.3.1
@@ -50,6 +51,7 @@ qrcode==7.3.1
 reportlab==3.6.9
 requests==2.27.1
 s3transfer==0.5.2
+schedule==1.1.0
 six==1.16.0
 sqlparse==0.4.2
 svglib==1.2.1
@@ -63,6 +65,7 @@ urllib3==1.26.8
 weasyprint==54.2
 webencodings==0.5.1
 whitenoise==6.0.0
+WooCommerce==3.0.0
 xhtml2pdf==0.2.7
 zipp==3.7.0
 zopfli==0.2.1
