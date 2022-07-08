@@ -229,3 +229,4 @@ class AllVendors(generics.ListAPIView):
     queryset = User.objects.all().filter(vendor=True)
     serializer_class = UserSerializer
     permission_classes = [IsSuperUser]
+    pagination_class = None
