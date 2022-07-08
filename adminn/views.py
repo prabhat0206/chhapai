@@ -37,6 +37,12 @@ def update_database(request):
     return Response({"Success": True})
 
 
+class OrderWithoutVendor(generics.ListAPIView):
+    queryset = Orders.objects.filter(vendor=None).order_by('-oid')
+    serializer_class = OrderSerializer
+    permission_classes = [IsSuperUser, ]
+
+
 class OrderView(generics.ListAPIView):
     queryset = Orders.objects.all().order_by('-oid')
     serializer_class = OrderSerializerWithJobs
