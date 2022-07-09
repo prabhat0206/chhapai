@@ -20,7 +20,7 @@ urlpatterns = [
     path('add_vendor', AddVendor.as_view(), name='add_vendor'),
     path('assign_order/<int:oid>', AssignOrder.as_view(), name='assign_order'),
     path('vendors', AllVendors.as_view(), name='vendors'),
-    path('assign_vendor', AssignVendor.as_view(), name='assign_vendor'),
+    path('assign_vendor/<int:pk>', AssignVendor.as_view(), name='assign_vendor'),
     path('sync_with_woo', update_database, name='update_database'),
     path('order_without_vendor', OrderWithoutVendor.as_view(), name='order_without_vendor'),
 ]
